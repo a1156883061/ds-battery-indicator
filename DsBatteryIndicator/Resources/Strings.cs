@@ -18,6 +18,7 @@ public static class Strings
             ["Language"] = "语言",
             ["About"] = "关于",
             ["Exit"] = "退出",
+            ["ShowHide"] = "显示/隐藏",
             ["Disconnected"] = "未连接",
             ["Charging"] = "充电中",
             ["LowBattery"] = "电量不足",
@@ -32,6 +33,7 @@ public static class Strings
             ["Language"] = "Language",
             ["About"] = "About",
             ["Exit"] = "Exit",
+            ["ShowHide"] = "Show/Hide",
             ["Disconnected"] = "Disconnected",
             ["Charging"] = "Charging",
             ["LowBattery"] = "Low Battery",
@@ -92,6 +94,7 @@ public static class Strings
     public static string Language => Get("Language");
     public static string About => Get("About");
     public static string Exit => Get("Exit");
+    public static string ShowHide => Get("ShowHide");
     public static string Disconnected => Get("Disconnected");
     public static string Charging => Get("Charging");
     public static string LowBattery => Get("LowBattery");

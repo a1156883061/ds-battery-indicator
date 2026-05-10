@@ -81,7 +81,21 @@ public partial class MainWindow : Window
 
         MenuExit.Click += (s, e) => Application.Current.Shutdown();
 
-        Closing += MainWindow_Closing;
+        // 关闭窗口时隐藏到托盘，保存位置
+        Closing += (s, e) =>
+        {
+            e.Cancel = true;
+            Hide();
+            AppSettings.Instance.WindowLeft = Left;
+            AppSettings.Instance.WindowTop = Top;
+            AppSettings.Instance.Save();
+        };
+    }
+
+    public void ShowWindow()
+    {
+        Show();
+        Activate();
     }
 
     private void UpdateMenuTexts()
@@ -140,15 +154,5 @@ public partial class MainWindow : Window
             key.SetValue("DsBatteryIndicator", $"\"{exePath}\"");
         else
             key.DeleteValue("DsBatteryIndicator", throwOnMissingValue: false);
-    }
-
-    private void MainWindow_Closing(object? sender, CancelEventArgs e)
-    {
-        // 保存窗口位置
-        AppSettings.Instance.WindowLeft = Left;
-        AppSettings.Instance.WindowTop = Top;
-        AppSettings.Instance.Save();
-
-        _viewModel.Dispose();
     }
 }

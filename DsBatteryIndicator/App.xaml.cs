@@ -48,11 +48,26 @@ public partial class App : Application
 
         _notifyIcon.DoubleClick += (s, e) =>
         {
-            _mainWindow?.Show();
-            _mainWindow?.Activate();
+            if (_mainWindow != null)
+            {
+                if (_mainWindow.IsVisible)
+                    _mainWindow.Hide();
+                else
+                    _mainWindow.ShowWindow();
+            }
         };
 
         var contextMenu = new System.Windows.Forms.ContextMenuStrip();
+        contextMenu.Items.Add(Strings.ShowHide, null, (s, e) =>
+        {
+            if (_mainWindow != null)
+            {
+                if (_mainWindow.IsVisible)
+                    _mainWindow.Hide();
+                else
+                    _mainWindow.ShowWindow();
+            }
+        });
         contextMenu.Items.Add(Strings.Topmost, null, (s, e) =>
         {
             if (_mainWindow != null)
