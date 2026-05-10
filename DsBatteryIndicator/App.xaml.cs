@@ -9,6 +9,7 @@ namespace DsBatteryIndicator;
 public partial class App : Application
 {
     private System.Windows.Forms.NotifyIcon? _notifyIcon;
+    private System.Windows.Forms.ToolStripMenuItem? _trayShowHideItem;
     private MainWindow? _mainWindow;
 
     protected override void OnStartup(StartupEventArgs e)
@@ -21,10 +22,11 @@ public partial class App : Application
         _mainWindow = new MainWindow();
         _mainWindow.Show();
 
-        // 监听 ViewModel 状态变化，更新托盘提示
         _mainWindow.ViewModel.PropertyChanged += OnViewModelPropertyChanged;
+        Strings.LanguageChanged += () => UpdateTrayShowHideText();
 
         CreateSystemTray();
+        UpdateTrayShowHideText();
     }
 
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -37,6 +39,26 @@ public partial class App : Application
         }
     }
 
+    private void ToggleWindow()
+    {
+        if (_mainWindow == null) return;
+
+        if (_mainWindow.IsVisible)
+            _mainWindow.Hide();
+        else
+            _mainWindow.ShowWindow();
+
+        UpdateTrayShowHideText();
+    }
+
+    private void UpdateTrayShowHideText()
+    {
+        if (_trayShowHideItem != null && _mainWindow != null)
+        {
+            _trayShowHideItem.Text = _mainWindow.IsVisible ? Strings.Hide : Strings.Show;
+        }
+    }
+
     private void CreateSystemTray()
     {
         _notifyIcon = new System.Windows.Forms.NotifyIcon
@@ -46,28 +68,12 @@ public partial class App : Application
             Icon = System.Drawing.SystemIcons.Shield
         };
 
-        _notifyIcon.DoubleClick += (s, e) =>
-        {
-            if (_mainWindow != null)
-            {
-                if (_mainWindow.IsVisible)
-                    _mainWindow.Hide();
-                else
-                    _mainWindow.ShowWindow();
-            }
-        };
+        _notifyIcon.DoubleClick += (s, e) => ToggleWindow();
 
         var contextMenu = new System.Windows.Forms.ContextMenuStrip();
-        contextMenu.Items.Add(Strings.ShowHide, null, (s, e) =>
-        {
-            if (_mainWindow != null)
-            {
-                if (_mainWindow.IsVisible)
-                    _mainWindow.Hide();
-                else
-                    _mainWindow.ShowWindow();
-            }
-        });
+        _trayShowHideItem = new System.Windows.Forms.ToolStripMenuItem();
+        _trayShowHideItem.Click += (s, e) => ToggleWindow();
+        contextMenu.Items.Add(_trayShowHideItem);
         contextMenu.Items.Add(Strings.Topmost, null, (s, e) =>
         {
             if (_mainWindow != null)
