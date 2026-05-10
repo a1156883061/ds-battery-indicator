@@ -58,33 +58,26 @@
                                 Padding="{TemplateBinding Padding}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
-                                <!-- 勾选图标 -->
-                                <Path Name="CheckMark" Grid.Column="0"
+                                <!-- 文字（左对齐） -->
+                                <ContentPresenter Grid.Column="0"
+                                                  ContentSource="Header"
+                                                  TextBlock.Foreground="{TemplateBinding Foreground}"
+                                                  RecognizesAccessKey="True"
+                                                  VerticalAlignment="Center"/>
+
+                                <!-- 勾选图标（右对齐） -->
+                                <Path Name="CheckMark" Grid.Column="1"
                                       Data="M2,6 L5,9 L12,2"
                                       Stroke="{StaticResource MenuCheckColor}"
                                       StrokeThickness="2"
                                       StrokeStartLineCap="Round" StrokeEndLineCap="Round"
                                       Width="14" Height="10" Stretch="Uniform"
-                                      VerticalAlignment="Center" Margin="0,0,6,0"
+                                      VerticalAlignment="Center" Margin="6,0,0,0"
                                       Visibility="Collapsed"/>
-
-                                <!-- 文字 -->
-                                <ContentPresenter Grid.Column="1"
-                                                  ContentSource="Header"
-                                                  RecognizesAccessKey="True"
-                                                  VerticalAlignment="Center"/>
-
-                                <!-- 输入手势提示 -->
-                                <TextBlock Name="InputGesture" Grid.Column="2"
-                                           Text="{TemplateBinding InputGestureText}"
-                                           Foreground="{StaticResource MenuMutedText}"
-                                           FontSize="11" VerticalAlignment="Center"
-                                           Margin="12,0,0,0"/>
                             </Grid>
                         </Border>
 

@@ -80,6 +80,8 @@ public partial class MainWindow : Window
                 MessageBoxButton.OK, MessageBoxImage.Information);
         };
 
+        MenuExit.Foreground = new System.Windows.Media.SolidColorBrush(
+            System.Windows.Media.Color.FromRgb(0xEF, 0x66, 0x66));
         MenuExit.Click += (s, e) => Application.Current.Shutdown();
 
         // 关闭窗口时隐藏到托盘，保存位置
