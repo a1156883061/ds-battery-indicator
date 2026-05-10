@@ -3,14 +3,119 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              ShutdownMode="OnExplicitShutdown">
     <Application.Resources>
+
+        <!-- 毛玻璃暗色菜单颜色常量 -->
+        <SolidColorBrush x:Key="MenuBg" Color="#202028"/>
+        <SolidColorBrush x:Key="MenuBorder" Color="#3A3A45"/>
+        <SolidColorBrush x:Key="MenuText" Color="#D8D8DD"/>
+        <SolidColorBrush x:Key="MenuHoverBg" Color="#38FFFFFF"/>
+        <SolidColorBrush x:Key="MenuSeparator" Color="#2A2A35"/>
+        <SolidColorBrush x:Key="MenuDangerText" Color="#EF6666"/>
+        <SolidColorBrush x:Key="MenuCheckColor" Color="#60A5FA"/>
+        <SolidColorBrush x:Key="MenuMutedText" Color="#808088"/>
+
+        <!-- 右键菜单样式 -->
         <Style TargetType="ContextMenu">
-            <Setter Property="Background" Value="#2A2A2E"/>
-            <Setter Property="Foreground" Value="#CCCCCC"/>
-            <Setter Property="BorderBrush" Value="#3A3A3E"/>
+            <Setter Property="Background" Value="{StaticResource MenuBg}"/>
+            <Setter Property="Foreground" Value="{StaticResource MenuText}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource MenuBorder}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="4"/>
+            <Setter Property="HasDropShadow" Value="True"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ContextMenu">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="24" ShadowDepth="4"
+                                                  Opacity="0.6" Color="Black"/>
+                            </Border.Effect>
+                            <ItemsPresenter/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
+
+        <!-- 菜单项样式 -->
         <Style TargetType="MenuItem">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#CCCCCC"/>
+            <Setter Property="Foreground" Value="{StaticResource MenuText}"/>
+            <Setter Property="Padding" Value="10,7"/>
+            <Setter Property="FontSize" Value="12.5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="MenuItem">
+                        <Border Name="ItemBorder"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="5"
+                                Margin="0,1"
+                                Padding="{TemplateBinding Padding}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- 勾选图标 -->
+                                <Path Name="CheckMark" Grid.Column="0"
+                                      Data="M2,6 L5,9 L12,2"
+                                      Stroke="{StaticResource MenuCheckColor}"
+                                      StrokeThickness="2"
+                                      StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                      Width="14" Height="10" Stretch="Uniform"
+                                      VerticalAlignment="Center" Margin="0,0,6,0"
+                                      Visibility="Collapsed"/>
+
+                                <!-- 文字 -->
+                                <ContentPresenter Grid.Column="1"
+                                                  ContentSource="Header"
+                                                  RecognizesAccessKey="True"
+                                                  VerticalAlignment="Center"/>
+
+                                <!-- 输入手势提示 -->
+                                <TextBlock Name="InputGesture" Grid.Column="2"
+                                           Text="{TemplateBinding InputGestureText}"
+                                           Foreground="{StaticResource MenuMutedText}"
+                                           FontSize="11" VerticalAlignment="Center"
+                                           Margin="12,0,0,0"/>
+                            </Grid>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsHighlighted" Value="True">
+                                <Setter TargetName="ItemBorder" Property="Background" Value="{StaticResource MenuHoverBg}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="{StaticResource MenuMutedText}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
+
+        <!-- 分隔线样式 -->
+        <Style TargetType="Separator">
+            <Setter Property="Height" Value="2"/>
+            <Setter Property="Margin" Value="6,3"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Separator">
+                        <Border Background="{StaticResource MenuSeparator}" Height="1"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
     </Application.Resources>
 </Application>
