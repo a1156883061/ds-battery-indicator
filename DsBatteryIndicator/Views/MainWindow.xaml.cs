@@ -52,6 +52,7 @@ public partial class MainWindow : Window
         UpdateMenuTexts();
         Strings.LanguageChanged += UpdateMenuTexts;
 
+        MenuHide.Click += (s, e) => Hide();
         MenuTopmost.IsChecked = true;
         MenuTopmost.Click += (s, e) =>
         {
@@ -100,6 +101,7 @@ public partial class MainWindow : Window
 
     private void UpdateMenuTexts()
     {
+        MenuHide.Header = Strings.ShowHide;
         MenuTopmost.Header = Strings.Topmost;
         MenuAutoStart.Header = Strings.AutoStart;
         MenuLanguage.Header = Strings.Language;
