@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet build *)",
+      "Bash(taskkill /F /IM DsBatteryIndicator.exe)",
+      "Bash(rm -f \"C:/Users/crown/AppData/Local/DsBatteryIndicator/debug.log\")",
+      "Bash(dotnet run *)",
+      "Read(//c/Users/crown/AppData/Local/DsBatteryIndicator/**)",
+      "Bash(rm -f \"C:/Users/crown/AppData/Local/DsBatteryIndicator/parser.log\")",
+      "Bash(cat \"C:/Users/crown/AppData/Local/DsBatteryIndicator/parser.log\")",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
+    ]
+  }
+}
