@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Media;
 using DsBatteryIndicator.Models;
+using DsBatteryIndicator.Resources;
 using DsBatteryIndicator.Services;
 
 namespace DsBatteryIndicator.ViewModels;
@@ -19,6 +20,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
     private int _batteryLevel;
     private bool _isCharging;
     private string _batteryText = "——";
+    private string _trayTooltip = "DS 电池指示器";
     private Brush _accentColor = new SolidColorBrush(Color.FromRgb(0x66, 0x66, 0x66));
     private bool _isBlinking;
 
@@ -58,6 +60,12 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
         set { _batteryText = value; OnPropertyChanged(); }
     }
 
+    public string TrayTooltip
+    {
+        get => _trayTooltip;
+        set { _trayTooltip = value; OnPropertyChanged(); }
+    }
+
     public Brush AccentColor
     {
         get => _accentColor;
@@ -82,18 +90,21 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
             {
                 case DeviceStatus.Normal:
                     AccentColor = new SolidColorBrush(Color.FromRgb(0x60, 0xA5, 0xFA)); // 蓝
+                    TrayTooltip = $"{Strings.AppName} — {device.BatteryLevel}%";
                     StopBlinking();
                     _lowBatteryNotified = false;
                     break;
 
                 case DeviceStatus.Charging:
                     AccentColor = new SolidColorBrush(Color.FromRgb(0x4A, 0xDE, 0x80)); // 绿
+                    TrayTooltip = $"{Strings.AppName} — {Strings.Charging} {device.BatteryLevel}%";
                     StopBlinking();
                     _lowBatteryNotified = false;
                     break;
 
                 case DeviceStatus.LowBattery:
                     AccentColor = new SolidColorBrush(Color.FromRgb(0xEF, 0x44, 0x44)); // 红
+                    TrayTooltip = $"{Strings.AppName} — {Strings.LowBattery} {device.BatteryLevel}%";
                     StartBlinking();
                     if (!_lowBatteryNotified)
                     {
@@ -104,6 +115,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
                 case DeviceStatus.Disconnected:
                     AccentColor = new SolidColorBrush(Color.FromRgb(0x66, 0x66, 0x66)); // 灰
+                    TrayTooltip = $"{Strings.AppName} — {Strings.Disconnected}";
                     IsCharging = false;
                     StopBlinking();
                     _lowBatteryNotified = false;
@@ -123,6 +135,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
             {
                 Status = DeviceStatus.Disconnected;
                 IsCharging = false;
+                TrayTooltip = $"{Strings.AppName} — {Strings.Disconnected}";
                 AccentColor = new SolidColorBrush(Color.FromRgb(0x66, 0x66, 0x66));
                 StopBlinking();
                 _lowBatteryNotified = false;

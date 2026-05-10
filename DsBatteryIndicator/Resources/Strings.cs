@@ -18,6 +18,9 @@ public static class Strings
             ["Language"] = "语言",
             ["About"] = "关于",
             ["Exit"] = "退出",
+            ["Disconnected"] = "未连接",
+            ["Charging"] = "充电中",
+            ["LowBattery"] = "电量不足",
             ["Toast_LowBattery"] = "DualSense 电量不足 ({0}%)，请充电",
             ["About_Text"] = "DS 电池指示器 v1.0\n显示 DualSense 手柄电量",
         },
@@ -29,6 +32,9 @@ public static class Strings
             ["Language"] = "Language",
             ["About"] = "About",
             ["Exit"] = "Exit",
+            ["Disconnected"] = "Disconnected",
+            ["Charging"] = "Charging",
+            ["LowBattery"] = "Low Battery",
             ["Toast_LowBattery"] = "DualSense battery low ({0}%), please charge",
             ["About_Text"] = "DS Battery Indicator v1.0\nDisplay DualSense controller battery level",
         },
@@ -86,6 +92,9 @@ public static class Strings
     public static string Language => Get("Language");
     public static string About => Get("About");
     public static string Exit => Get("Exit");
+    public static string Disconnected => Get("Disconnected");
+    public static string Charging => Get("Charging");
+    public static string LowBattery => Get("LowBattery");
     public static string Toast_LowBattery => Get("Toast_LowBattery");
     public static string About_Text => Get("About_Text");
 

@@ -45,12 +45,8 @@
             </Path.RenderTransform>
         </Path>
 
-        <!-- 中心手柄图标 -->
-        <TextBlock Text="🎮" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"
-                   RenderTransformOrigin="0.5,0.5">
-            <TextBlock.RenderTransform>
-                <TranslateTransform Y="-0.5"/>
-            </TextBlock.RenderTransform>
-        </TextBlock>
+        <!-- 中心手柄图标（Segoe MDL2 Assets 字体，颜色可绑定） -->
+        <TextBlock Text="&#xE7FC;" FontFamily="Segoe MDL2 Assets" FontSize="20"
+                   Foreground="#8899AA" HorizontalAlignment="Center" VerticalAlignment="Center"/>
     </Grid>
 </UserControl>

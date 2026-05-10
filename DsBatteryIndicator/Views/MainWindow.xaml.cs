@@ -17,6 +17,8 @@ public partial class MainWindow : Window
     private bool _isTopmost = true;
     private bool _isAutoStart;
 
+    public MainViewModel ViewModel => _viewModel;
+
     public MainWindow()
     {
         InitializeComponent();

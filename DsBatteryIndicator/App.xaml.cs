@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Windows;
 using DsBatteryIndicator.Resources;
 using DsBatteryIndicator.Services;
@@ -14,18 +15,26 @@ public partial class App : Application
     {
         base.OnStartup(e);
 
-        // 初始化语言
         Strings.DetectLanguage();
-
-        // 创建开始菜单快捷方式（Toast 通知需要）
         NotificationService.EnsureShortcut();
 
-        // 创建主窗口
         _mainWindow = new MainWindow();
         _mainWindow.Show();
 
-        // 创建系统托盘
+        // 监听 ViewModel 状态变化，更新托盘提示
+        _mainWindow.ViewModel.PropertyChanged += OnViewModelPropertyChanged;
+
         CreateSystemTray();
+    }
+
+    private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(ViewModels.MainViewModel.TrayTooltip)
+            && _notifyIcon != null
+            && _mainWindow != null)
+        {
+            _notifyIcon.Text = _mainWindow.ViewModel.TrayTooltip;
+        }
     }
 
     private void CreateSystemTray()
