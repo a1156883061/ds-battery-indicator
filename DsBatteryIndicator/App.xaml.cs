@@ -23,6 +23,7 @@ public partial class App : Application
         _mainWindow.Show();
 
         _mainWindow.ViewModel.PropertyChanged += OnViewModelPropertyChanged;
+        _mainWindow.IsVisibleChanged += (s, e) => UpdateTrayShowHideText();
         Strings.LanguageChanged += () => UpdateTrayShowHideText();
 
         CreateSystemTray();
