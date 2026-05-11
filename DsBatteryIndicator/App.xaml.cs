@@ -27,12 +27,7 @@ public partial class App : Application
             _mainWindow.Show();
 
         _mainWindow.ViewModel.PropertyChanged += OnViewModelPropertyChanged;
-        _mainWindow.IsVisibleChanged += (s, e) =>
-        {
-            UpdateTrayShowHideText();
-            AppSettings.Instance.WindowVisible = _mainWindow.IsVisible;
-            AppSettings.Instance.Save();
-        };
+        _mainWindow.IsVisibleChanged += (s, e) => UpdateTrayShowHideText();
         Strings.LanguageChanged += () => UpdateTrayShowHideText();
 
         UpdateTrayShowHideText();
@@ -53,10 +48,17 @@ public partial class App : Application
         if (_mainWindow == null) return;
 
         if (_mainWindow.IsVisible)
+        {
             _mainWindow.Hide();
+            AppSettings.Instance.WindowVisible = false;
+        }
         else
+        {
             _mainWindow.ShowWindow();
+            // ShowWindow 内部已保存 WindowVisible=true
+        }
 
+        AppSettings.Instance.Save();
         UpdateTrayShowHideText();
     }
 
