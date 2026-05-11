@@ -75,7 +75,7 @@
             <Slider x:Name="SliderIntensity" Grid.Column="1" Style="{StaticResource SlimSlider}"
                     Minimum="50" Maximum="255" Value="255" Margin="6,0,8,0"/>
             <TextBox x:Name="TxtIntensity" Grid.Column="2" Style="{StaticResource NumInput}"
-                     VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                     VerticalAlignment="Center" HorizontalAlignment="Left"/>
         </Grid>
 
         <!-- 震动时间 -->
@@ -88,7 +88,7 @@
             <TextBlock Text="震动时间" VerticalAlignment="Center" FontSize="12"/>
             <Slider x:Name="SliderHapticTime" Grid.Column="1" Style="{StaticResource SlimSlider}"
                     Minimum="100" Maximum="3000" Value="800" Margin="6,0,8,0"/>
-            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
                 <TextBox x:Name="TxtHapticTime" Style="{StaticResource NumInput}"/>
                 <TextBlock Text="ms" FontSize="10" Foreground="#808088" VerticalAlignment="Center" Margin="3,0,0,0"/>
             </StackPanel>
@@ -104,7 +104,7 @@
             <TextBlock Text="灯带时间" VerticalAlignment="Center" FontSize="12"/>
             <Slider x:Name="SliderLightTime" Grid.Column="1" Style="{StaticResource SlimSlider}"
                     Minimum="500" Maximum="10000" Value="3000" Margin="6,0,8,0"/>
-            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
                 <TextBox x:Name="TxtLightTime" Style="{StaticResource NumInput}"/>
                 <TextBlock Text="ms" FontSize="10" Foreground="#808088" VerticalAlignment="Center" Margin="3,0,0,0"/>
             </StackPanel>
@@ -145,7 +145,7 @@
         </Grid>
 
         <!-- 按钮 -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,8,0,0">
             <Button x:Name="BtnTest" Content="测试" Width="76" Height="30" Margin="0,0,8,0"
                     Foreground="#D0D0D8" FontSize="12" Cursor="Hand">
                 <Button.Template>
