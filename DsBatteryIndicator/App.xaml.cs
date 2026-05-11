@@ -68,7 +68,7 @@ public partial class App : Application
         {
             Text = Strings.AppName,
             Visible = true,
-            Icon = System.Drawing.SystemIcons.Shield
+            Icon = System.Drawing.Icon.ExtractAssociatedIcon(Environment.ProcessPath!)
         };
 
         _notifyIcon.DoubleClick += (s, e) => ToggleWindow();
