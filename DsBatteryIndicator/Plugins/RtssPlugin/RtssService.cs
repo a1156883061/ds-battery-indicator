@@ -4,11 +4,6 @@ using System.Text;
 
 namespace DsBatteryIndicator.Plugins.RtssPlugin;
 
-/// <summary>
-/// RTSS 集成服务。通过 Windows 共享内存写入 OSD 文本数据。
-/// 参考 RTSS SDK RTSSSharedMemory.h v2.0 官方结构定义。
-/// OSD 槽位使用纯文本 szOSD[256]，无需浮点字段。
-/// </summary>
 public class RtssService : IPlugin, IDisposable
 {
     [DllImport("kernel32.dll", SetLastError = true)]
@@ -26,10 +21,10 @@ public class RtssService : IPlugin, IDisposable
 
     private const uint FILE_MAP_READ = 0x0004;
     private const uint FILE_MAP_WRITE = 0x0002;
-    private const string SharedMemoryName = "Global\\RTSSSharedMemoryV2";
+    // RTSS 7.x uses session-local, 6.x and some configs use Global\
+    private static readonly string[] SharedMemoryNames = { "RTSSSharedMemoryV2", "Global\\RTSSSharedMemoryV2" };
     private const uint RtssSignature = 0x52545353;
     private const string OwnerId = "DS Battery Indicator";
-    private const int MaxRetries = 3;
 
     private IntPtr _hMapFile = IntPtr.Zero;
     private IntPtr _pView = IntPtr.Zero;
@@ -37,170 +32,148 @@ public class RtssService : IPlugin, IDisposable
     private int _osdEntrySize;
     private int _osdArrOffset;
     private int _osdFrameOffset;
-    private int _busyOffset = -1;     // v2.14+
+    private int _busyOffset = -1;
     private uint _version;
     private bool _disposed;
     private int _claimedSlot = -1;
-    private bool _initFailed;
+    private int _writeCount;
 
     public string Name => "RTSS Overlay";
     public bool IsAvailable { get; private set; }
 
     public void Initialize()
     {
-        if (_initFailed) return;
-
         try
         {
-            _hMapFile = OpenFileMapping(FILE_MAP_READ | FILE_MAP_WRITE, false, SharedMemoryName);
+            Log("=== Init Start ===");
+
+            string usedName = "";
+            foreach (var name in SharedMemoryNames)
+            {
+                _hMapFile = OpenFileMapping(FILE_MAP_READ | FILE_MAP_WRITE, false, name);
+                if (_hMapFile != IntPtr.Zero) { usedName = name; break; }
+                Log($"OpenFileMapping '{name}' FAILED: {Marshal.GetLastWin32Error()}");
+            }
             if (_hMapFile == IntPtr.Zero)
             {
-                Debug.WriteLine("[RtssService] RTSS 共享内存未找到，RTSS 可能未运行");
-                _initFailed = true;
+                Log("All shared memory names failed");
                 return;
             }
+            Log($"OpenFileMapping '{usedName}' OK");
 
             _pView = MapViewOfFile(_hMapFile, FILE_MAP_READ | FILE_MAP_WRITE, 0, 0, 0);
             if (_pView == IntPtr.Zero)
             {
-                Debug.WriteLine("[RtssService] 映射共享内存失败");
-                _initFailed = true;
+                Log($"MapViewOfFile FAILED: {Marshal.GetLastWin32Error()}");
+                _hMapFile = IntPtr.Zero;
                 return;
             }
+            Log("MapViewOfFile OK");
 
-            // 解析头部（按 v2.0 结构顺序）
             int off = 0;
             uint signature = (uint)Marshal.ReadInt32(_pView, off); off += 4;
             _version = (uint)Marshal.ReadInt32(_pView, off); off += 4;
+            Log($"Signature=0x{signature:X8} (expected 0x{RtssSignature:X8}), Version={_version >> 16}.{_version & 0xFFFF}");
 
             if (signature != RtssSignature)
             {
-                Debug.WriteLine($"[RtssService] 签名不匹配: 0x{signature:X8}");
+                Log("BAD SIGNATURE - aborting");
                 CleanupMapping();
                 return;
             }
 
-            // dwAppEntrySize, dwAppArrOffset, dwAppArrSize
-            off += 12;
+            int appEntrySize = Marshal.ReadInt32(_pView, off); off += 4;
+            int appArrOffset = Marshal.ReadInt32(_pView, off); off += 4;
+            int appArrSize = Marshal.ReadInt32(_pView, off); off += 4;
+            Log($"App: entrySize={appEntrySize}, arrOffset={appArrOffset}, arrSize={appArrSize}");
 
             _osdEntrySize = Marshal.ReadInt32(_pView, off); off += 4;
             _osdArrOffset = Marshal.ReadInt32(_pView, off); off += 4;
             _osdSlotCount = Marshal.ReadInt32(_pView, off); off += 4;
+            Log($"OSD: entrySize={_osdEntrySize}, arrOffset=0x{_osdArrOffset:X}, slotCount={_osdSlotCount}");
 
-            // dwOSDFrame
             _osdFrameOffset = off;
-            off += 4;
+            int frame = Marshal.ReadInt32(_pView, _osdFrameOffset);
+            Log($"dwOSDFrame offset=0x{_osdFrameOffset:X}, value={frame}");
 
-            // dwBusy (v2.14+, version >= 2.14)
             uint major = (_version >> 16) & 0xFFFF;
             uint minor = _version & 0xFFFF;
             if (major > 2 || (major == 2 && minor >= 14))
             {
-                _busyOffset = off;
+                _busyOffset = off + 4; // after dwOSDFrame
+                Log($"dwBusy offset=0x{_busyOffset:X} (v{major}.{minor} >= 2.14)");
             }
 
-            if (_osdEntrySize <= 0 || _osdArrOffset <= 0 || _osdSlotCount <= 0)
+            // Dump all OSD slots' owner info
+            for (int i = 0; i < Math.Min(_osdSlotCount, 8); i++)
             {
-                Debug.WriteLine("[RtssService] OSD 数组信息无效");
-                CleanupMapping();
-                return;
+                int slotBase = _osdArrOffset + i * _osdEntrySize;
+                string text = ReadFixedString(IntPtr.Add(_pView, slotBase), 40);
+                string owner = ReadFixedString(IntPtr.Add(_pView, slotBase + 256), 40);
+                Log($"  Slot[{i}]: text='{text}' owner='{owner}'");
             }
 
             IsAvailable = true;
-            Debug.WriteLine($"[RtssService] 已连接 v{major}.{minor}, OSD slots={_osdSlotCount}, entrySize={_osdEntrySize}");
+            Log("=== Init OK ===");
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"[RtssService] 初始化失败: {ex.Message}");
+            Log($"Init exception: {ex}");
             CleanupMapping();
         }
     }
 
     public void UpdateBattery(int percent)
     {
-        if (!IsAvailable || _pView == IntPtr.Zero)
-            return;
+        if (!IsAvailable || _pView == IntPtr.Zero) return;
 
+        _writeCount++;
         string text = $"DS Battery: {percent}%";
-        WriteOsdText(text);
-    }
+        Log($"UpdateBattery #{_writeCount}: {text}");
 
-    private void WriteOsdText(string text)
-    {
-        for (int retry = 0; retry < MaxRetries; retry++)
+        try
         {
-            try
+            // dwBusy 锁
+            if (_busyOffset >= 0)
             {
-                if (_busyOffset >= 0)
+                int busy = Marshal.ReadInt32(_pView, _busyOffset);
+                if ((busy & 1) != 0)
                 {
-                    // 检查并设置 busy 锁
-                    int busy = Marshal.ReadInt32(_pView, _busyOffset);
-                    if ((busy & 1) != 0)
-                    {
-                        // 其他客户端正在写入，等待后重试
-                        if (retry < MaxRetries - 1)
-                        {
-                            Thread.Sleep(5);
-                            continue;
-                        }
-                        return;
-                    }
-                    Marshal.WriteInt32(_pView, _busyOffset, busy | 1);
+                    Log($"  Busy locked (0x{busy:X8}), skipping");
+                    return;
                 }
+                Marshal.WriteInt32(_pView, _busyOffset, busy | 1);
+            }
 
-                int slotIndex = FindOrClaimSlot();
-                if (slotIndex < 0)
-                    break;
-
-                int slotBase = _osdArrOffset + slotIndex * _osdEntrySize;
-
-                // 写入 szOSD（偏移 0，256 字节）
-                WriteFixedString(IntPtr.Add(_pView, slotBase), text, 256);
-
-                // 写入 szOSDOwner（偏移 256，256 字节）
-                WriteFixedString(IntPtr.Add(_pView, slotBase + 256), OwnerId, 256);
-
-                // 递增 dwOSDFrame
-                int frame = Marshal.ReadInt32(_pView, _osdFrameOffset);
-                Marshal.WriteInt32(_pView, _osdFrameOffset, frame + 1);
-
-                if (_busyOffset >= 0)
-                {
-                    Marshal.WriteInt32(_pView, _busyOffset, 0);
-                }
+            int slotIndex = FindOrClaimSlot();
+            if (slotIndex < 0)
+            {
+                Log("  No available OSD slot!");
+                if (_busyOffset >= 0) Marshal.WriteInt32(_pView, _busyOffset, 0);
                 return;
             }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[RtssService] 写入失败: {ex.Message}");
-                try { if (_busyOffset >= 0) Marshal.WriteInt32(_pView, _busyOffset, 0); } catch { }
-                return;
-            }
+            Log($"  Writing to slot[{slotIndex}]");
+
+            int slotBase = _osdArrOffset + slotIndex * _osdEntrySize;
+            WriteFixedString(IntPtr.Add(_pView, slotBase), text, 256);
+            WriteFixedString(IntPtr.Add(_pView, slotBase + 256), OwnerId, 256);
+
+            int frame = Marshal.ReadInt32(_pView, _osdFrameOffset);
+            Marshal.WriteInt32(_pView, _osdFrameOffset, frame + 1);
+            Log($"  Written, frame {frame}→{frame + 1}");
+
+            if (_busyOffset >= 0)
+                Marshal.WriteInt32(_pView, _busyOffset, 0);
         }
-    }
-
-    private static void WriteFixedString(IntPtr dest, string text, int maxBytes)
-    {
-        byte[] buffer = new byte[maxBytes];
-        byte[] src = Encoding.ASCII.GetBytes(text);
-        int len = Math.Min(src.Length, maxBytes - 1);
-        Array.Copy(src, buffer, len);
-        Marshal.Copy(buffer, 0, dest, maxBytes);
+        catch (Exception ex)
+        {
+            Log($"  Write exception: {ex.Message}");
+            try { if (_busyOffset >= 0) Marshal.WriteInt32(_pView, _busyOffset, 0); } catch { }
+        }
     }
 
     private int FindOrClaimSlot()
     {
-        // 检查已认领槽位是否仍有效
-        if (_claimedSlot >= 0 && _claimedSlot < _osdSlotCount)
-        {
-            int checkBase = _osdArrOffset + _claimedSlot * _osdEntrySize;
-            string existing = ReadFixedString(IntPtr.Add(_pView, checkBase + 256), 256);
-            if (existing == OwnerId || string.IsNullOrEmpty(existing))
-                return _claimedSlot;
-            _claimedSlot = -1;
-        }
-
-        // 搜索可用槽位
         for (int i = 0; i < _osdSlotCount; i++)
         {
             int slotBase = _osdArrOffset + i * _osdEntrySize;
@@ -212,8 +185,16 @@ public class RtssService : IPlugin, IDisposable
                 return i;
             }
         }
-
         return -1;
+    }
+
+    private static void WriteFixedString(IntPtr dest, string text, int maxBytes)
+    {
+        byte[] buffer = new byte[maxBytes];
+        byte[] src = Encoding.ASCII.GetBytes(text);
+        int len = Math.Min(src.Length, maxBytes - 1);
+        Array.Copy(src, buffer, len);
+        Marshal.Copy(buffer, 0, dest, maxBytes);
     }
 
     private static string ReadFixedString(IntPtr src, int maxBytes)
@@ -221,7 +202,7 @@ public class RtssService : IPlugin, IDisposable
         byte[] buffer = new byte[maxBytes];
         Marshal.Copy(src, buffer, 0, maxBytes);
         int nullIdx = Array.IndexOf(buffer, (byte)0);
-        return Encoding.ASCII.GetString(buffer, 0, nullIdx >= 0 ? nullIdx : maxBytes);
+        return Encoding.ASCII.GetString(buffer, 0, nullIdx >= 0 ? nullIdx : Math.Min(maxBytes, 40));
     }
 
     public void Shutdown()
@@ -239,6 +220,7 @@ public class RtssService : IPlugin, IDisposable
         }
         CleanupMapping();
         _claimedSlot = -1;
+        Log("Shutdown");
     }
 
     private void CleanupMapping()
@@ -246,7 +228,6 @@ public class RtssService : IPlugin, IDisposable
         if (_pView != IntPtr.Zero) { UnmapViewOfFile(_pView); _pView = IntPtr.Zero; }
         if (_hMapFile != IntPtr.Zero) { CloseHandle(_hMapFile); _hMapFile = IntPtr.Zero; }
         IsAvailable = false;
-        _initFailed = true;
     }
 
     public void Dispose()
@@ -254,5 +235,19 @@ public class RtssService : IPlugin, IDisposable
         if (_disposed) return;
         _disposed = true;
         Shutdown();
+    }
+
+    private static void Log(string msg)
+    {
+        try
+        {
+            string path = System.IO.Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "DsBatteryIndicator", "rtss.log");
+            string dir = System.IO.Path.GetDirectoryName(path)!;
+            System.IO.Directory.CreateDirectory(dir);
+            System.IO.File.AppendAllText(path, $"{DateTime.Now:HH:mm:ss.fff} {msg}\n");
+        }
+        catch { }
     }
 }
