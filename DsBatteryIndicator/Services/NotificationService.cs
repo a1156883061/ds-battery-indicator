@@ -38,7 +38,7 @@ public static class NotificationService
         {
             string msg = string.Format(Strings.Toast_LowBattery, batteryLevel);
             trayIcon.ShowBalloonTip(5000, Strings.AppName, msg,
-                System.Windows.Forms.ToolTipIcon.Warning);
+                System.Windows.Forms.ToolTipIcon.None);
             Log("托盘气泡已发送");
         }
         catch (Exception ex)
