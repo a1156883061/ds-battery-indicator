@@ -16,7 +16,8 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 {
     private readonly HidService _hidService;
     private RtssService? _rtssService;
-    private bool _lowBatteryNotified;
+    private System.Timers.Timer? _lowBatteryTimer;
+    private bool _lowBatteryNotifiedOnce;
 
     /// <summary>由 App 注入，用于托盘气泡通知</summary>
     public System.Windows.Forms.NotifyIcon? TrayIcon { get; set; }
@@ -62,6 +63,42 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
     public void SendHapticTest()
     {
         _hidService.SendHapticPulse();
+    }
+
+    private void HandleLowBattery(int batteryLevel)
+    {
+        var cfg = AppSettings.Instance;
+        if (!cfg.LowBatteryAlertEnabled) return;
+
+        if (!_lowBatteryNotifiedOnce)
+        {
+            _lowBatteryNotifiedOnce = true;
+            NotificationService.NotifyLowBattery(batteryLevel, TrayIcon, _hidService);
+        }
+
+        // 重复提醒
+        if (cfg.LowBatteryRepeatEnabled && _lowBatteryTimer == null)
+        {
+            _lowBatteryTimer = new System.Timers.Timer(cfg.LowBatteryRepeatIntervalMs);
+            _lowBatteryTimer.Elapsed += (s, e) =>
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    if (!cfg.LowBatteryAlertEnabled) { StopLowBatteryRepeat(); return; }
+                    NotificationService.NotifyLowBattery(batteryLevel, TrayIcon, _hidService);
+                });
+            };
+            _lowBatteryTimer.AutoReset = true;
+            _lowBatteryTimer.Start();
+        }
+    }
+
+    private void StopLowBatteryRepeat()
+    {
+        _lowBatteryTimer?.Stop();
+        _lowBatteryTimer?.Dispose();
+        _lowBatteryTimer = null;
+        _lowBatteryNotifiedOnce = false;
     }
 
     public DeviceStatus Status
@@ -120,25 +157,21 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
                     AccentColor = new SolidColorBrush(Color.FromRgb(0x60, 0xA5, 0xFA)); // 蓝
                     TrayTooltip = $"{Strings.AppName} — {device.BatteryLevel}%";
                     StopBlinking();
-                    _lowBatteryNotified = false;
+                    StopLowBatteryRepeat();
                     break;
 
                 case DeviceStatus.Charging:
                     AccentColor = new SolidColorBrush(Color.FromRgb(0x4A, 0xDE, 0x80)); // 绿
                     TrayTooltip = $"{Strings.AppName} — {Strings.Charging} {device.BatteryLevel}%";
                     StopBlinking();
-                    _lowBatteryNotified = false;
+                    StopLowBatteryRepeat();
                     break;
 
                 case DeviceStatus.LowBattery:
                     AccentColor = new SolidColorBrush(Color.FromRgb(0xEF, 0x44, 0x44)); // 红
                     TrayTooltip = $"{Strings.AppName} — {Strings.LowBattery} {device.BatteryLevel}%";
                     StartBlinking();
-                    if (!_lowBatteryNotified)
-                    {
-                        NotificationService.NotifyLowBattery(device.BatteryLevel, TrayIcon, _hidService);
-                        _lowBatteryNotified = true;
-                    }
+                    HandleLowBattery(device.BatteryLevel);
                     break;
 
                 case DeviceStatus.Disconnected:
@@ -146,7 +179,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
                     TrayTooltip = $"{Strings.AppName} — {Strings.Disconnected}";
                     IsCharging = false;
                     StopBlinking();
-                    _lowBatteryNotified = false;
+                    StopLowBatteryRepeat();
                     break;
             }
 
@@ -167,7 +200,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
                 TrayTooltip = $"{Strings.AppName} — {Strings.Disconnected}";
                 AccentColor = new SolidColorBrush(Color.FromRgb(0x66, 0x66, 0x66));
                 StopBlinking();
-                _lowBatteryNotified = false;
+                StopLowBatteryRepeat();
             }
         });
     }
@@ -195,6 +228,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
     public void Dispose()
     {
+        StopLowBatteryRepeat();
         _rtssService?.Dispose();
         _hidService.Dispose();
     }

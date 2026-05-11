@@ -29,10 +29,20 @@ public partial class HapticSettingsWindow : Window
         TxtG.Text = cfg.LightbarColorG.ToString();
         TxtB.Text = cfg.LightbarColorB.ToString();
 
+        // 电量不足设置
+        ChkAlertEnabled.IsChecked = cfg.LowBatteryAlertEnabled;
+        SliderThreshold.Value = cfg.LowBatteryThreshold;
+        TxtThreshold.Text = cfg.LowBatteryThreshold.ToString();
+        ChkRepeatEnabled.IsChecked = cfg.LowBatteryRepeatEnabled;
+        SliderRepeatInterval.Value = cfg.LowBatteryRepeatIntervalMs / 1000;
+        TxtRepeatInterval.Text = (cfg.LowBatteryRepeatIntervalMs / 1000).ToString();
+
         // 滑块 ↔ 输入框 双向同步
         BindSlider(SliderIntensity, TxtIntensity, 0, 255);
         BindSlider(SliderHapticTime, TxtHapticTime, 100, 3000);
         BindSlider(SliderLightTime, TxtLightTime, 500, 10000);
+        BindSlider(SliderThreshold, TxtThreshold, 10, 90);
+        BindSlider(SliderRepeatInterval, TxtRepeatInterval, 15, 300);
 
         // RGB 输入验证
         BindRgbInput(TxtR);
@@ -117,6 +127,11 @@ public partial class HapticSettingsWindow : Window
         cfg.LightbarColorR = (byte)ClampInt(TxtR.Text, 0, 255);
         cfg.LightbarColorG = (byte)ClampInt(TxtG.Text, 0, 255);
         cfg.LightbarColorB = (byte)ClampInt(TxtB.Text, 0, 255);
+
+        cfg.LowBatteryAlertEnabled = ChkAlertEnabled.IsChecked == true;
+        cfg.LowBatteryThreshold = ClampInt(TxtThreshold.Text, 10, 90);
+        cfg.LowBatteryRepeatEnabled = ChkRepeatEnabled.IsChecked == true;
+        cfg.LowBatteryRepeatIntervalMs = ClampInt(TxtRepeatInterval.Text, 15, 300) * 1000;
     }
 
     private static int ClampInt(string text, int min, int max)

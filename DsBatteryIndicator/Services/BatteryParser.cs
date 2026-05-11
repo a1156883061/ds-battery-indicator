@@ -36,7 +36,7 @@ public static class BatteryParser
         DeviceStatus status;
         if (isCharging)
             status = DeviceStatus.Charging;
-        else if (batteryLevel <= 60)
+        else if (batteryLevel <= 50)
             status = DeviceStatus.LowBattery;
         else
             status = DeviceStatus.Normal;

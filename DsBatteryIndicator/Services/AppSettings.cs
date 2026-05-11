@@ -45,6 +45,12 @@ public class AppSettings
     public byte LightbarColorG { get; set; } = 0;
     public byte LightbarColorB { get; set; } = 0;
 
+    // 电量不足提示配置
+    public bool LowBatteryAlertEnabled { get; set; } = true;
+    public int LowBatteryThreshold { get; set; } = 10;
+    public bool LowBatteryRepeatEnabled { get; set; } = true;
+    public int LowBatteryRepeatIntervalMs { get; set; } = 60000;
+
     public void Save()
     {
         string dir = Path.GetDirectoryName(FilePath)!;
