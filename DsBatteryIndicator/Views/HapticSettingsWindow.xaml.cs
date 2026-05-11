@@ -53,7 +53,7 @@ public partial class HapticSettingsWindow : Window
         BindRgbInput(TxtB);
 
         // 预设间隔按钮
-        InitRepeatIntervalButtons();
+        InitPresetButtons();
 
         // 测试按钮
         BtnTest.Click += (s, e) =>
@@ -138,12 +138,29 @@ public partial class HapticSettingsWindow : Window
         LblRepeatInterval.Text = Strings.RepeatInterval;
     }
 
-    private void InitRepeatIntervalButtons()
+    private void InitPresetButtons()
     {
+        // 提醒间隔
         StyleBtn(BtnInterval300);
         StyleBtn(BtnInterval600);
         StyleBtn(BtnInterval1800);
         StyleBtn(BtnInterval3600);
+        // 震动时间 - 从 XAML 按名称查找
+        StyleBtnByName("BtnHaptic200");
+        StyleBtnByName("BtnHaptic500");
+        StyleBtnByName("BtnHaptic800");
+        StyleBtnByName("BtnHaptic1000");
+        // 灯带时间
+        StyleBtnByName("BtnLight1000");
+        StyleBtnByName("BtnLight3000");
+        StyleBtnByName("BtnLight5000");
+        StyleBtnByName("BtnLight10000");
+    }
+
+    private void StyleBtnByName(string name)
+    {
+        var btn = FindName(name) as System.Windows.Controls.Button;
+        if (btn != null) StyleBtn(btn);
     }
 
     private static void StyleBtn(System.Windows.Controls.Button btn)
