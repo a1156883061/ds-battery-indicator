@@ -9,7 +9,9 @@
       "Bash(rm -f \"C:/Users/crown/AppData/Local/DsBatteryIndicator/parser.log\")",
       "Bash(cat \"C:/Users/crown/AppData/Local/DsBatteryIndicator/parser.log\")",
       "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Read(//c/Program Files \\(x86\\)/RivaTuner Statistics Server/SDK/Include/**)",
+      "Read(//c/Program Files/RivaTuner Statistics Server/SDK/**)"
     ]
   }
 }
