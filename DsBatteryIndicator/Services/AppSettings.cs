@@ -49,7 +49,7 @@ public class AppSettings
     public bool LowBatteryAlertEnabled { get; set; } = true;
     public int LowBatteryThreshold { get; set; } = 10;
     public bool LowBatteryRepeatEnabled { get; set; } = true;
-    public int LowBatteryRepeatIntervalMs { get; set; } = 60000;
+    public int LowBatteryRepeatIntervalMs { get; set; } = 600000;
 
     public void Save()
     {

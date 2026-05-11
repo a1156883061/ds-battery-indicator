@@ -50,7 +50,7 @@ public partial class HapticSettingsWindow : Window
         BindSlider(SliderHapticTime, TxtHapticTime, 100, 3000);
         BindSlider(SliderLightTime, TxtLightTime, 500, 10000);
         BindSlider(SliderThreshold, TxtThreshold, 10, 90);
-        BindSlider(SliderRepeatInterval, TxtRepeatInterval, 15, 300);
+        BindSlider(SliderRepeatInterval, TxtRepeatInterval, 15, 3600);
 
         // RGB 输入验证
         BindRgbInput(TxtR);
@@ -153,7 +153,7 @@ public partial class HapticSettingsWindow : Window
         cfg.LowBatteryAlertEnabled = ChkAlertEnabled.IsChecked == true;
         cfg.LowBatteryThreshold = ClampInt(TxtThreshold.Text, 10, 90);
         cfg.LowBatteryRepeatEnabled = ChkRepeatEnabled.IsChecked == true;
-        cfg.LowBatteryRepeatIntervalMs = ClampInt(TxtRepeatInterval.Text, 15, 300) * 1000;
+        cfg.LowBatteryRepeatIntervalMs = ClampInt(TxtRepeatInterval.Text, 15, 86400) * 1000;
     }
 
     private static int ClampInt(string text, int min, int max)
