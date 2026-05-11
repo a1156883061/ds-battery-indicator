@@ -5,6 +5,7 @@ using System.Windows.Media;
 using DsBatteryIndicator.Models;
 using DsBatteryIndicator.Resources;
 using DsBatteryIndicator.Services;
+using DsBatteryIndicator.Plugins.RtssPlugin;
 
 namespace DsBatteryIndicator.ViewModels;
 
@@ -14,6 +15,7 @@ namespace DsBatteryIndicator.ViewModels;
 public class MainViewModel : INotifyPropertyChanged, IDisposable
 {
     private readonly HidService _hidService;
+    private RtssService? _rtssService;
     private bool _lowBatteryNotified;
 
     private DeviceStatus _status = DeviceStatus.Disconnected;
@@ -34,6 +36,24 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
         _hidService.BatteryDataReceived += OnBatteryDataReceived;
         _hidService.ConnectionChanged += OnConnectionChanged;
         _hidService.StartWatching();
+
+        if (AppSettings.Instance.RtssEnabled)
+        {
+            _rtssService = new RtssService();
+            _rtssService.Initialize();
+        }
+    }
+
+    public void EnableRtss()
+    {
+        _rtssService ??= new RtssService();
+        _rtssService.Initialize();
+    }
+
+    public void DisableRtss()
+    {
+        _rtssService?.Shutdown();
+        _rtssService = null;
     }
 
     public DeviceStatus Status
@@ -124,6 +144,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
             // 在 AccentColor 之后设置，确保充电环拿到正确颜色
             IsCharging = device.IsCharging;
+            _rtssService?.UpdateBattery(device.BatteryLevel);
         });
     }
 
@@ -166,6 +187,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
 
     public void Dispose()
     {
+        _rtssService?.Dispose();
         _hidService.Dispose();
     }
 }
