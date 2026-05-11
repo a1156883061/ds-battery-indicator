@@ -93,10 +93,14 @@ public partial class MainWindow : Window
 
         MenuTestNotify.Click += (s, e) =>
         {
-            bool ok = NotificationService.ShowTestNotification();
-            MessageBox.Show(ok ? "通知发送成功！" : "通知发送失败，请查看 notification.log",
-                Strings.AppName, MessageBoxButton.OK,
-                ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+            // 通过托盘气泡触发测试，验证三通道
+            _viewModel.TrayIcon?.ShowBalloonTip(3000, Strings.AppName,
+                "测试通知：托盘气泡+提示音+手柄震动",
+                System.Windows.Forms.ToolTipIcon.Info);
+            System.Media.SystemSounds.Exclamation.Play();
+            _viewModel.SendHapticTest();
+            MessageBox.Show("三通道测试触发完成：\n• 托盘气泡\n• 提示音\n• 手柄震动+灯带",
+                Strings.AppName, MessageBoxButton.OK, MessageBoxImage.Information);
         };
 
         MenuAbout.Click += (s, e) =>

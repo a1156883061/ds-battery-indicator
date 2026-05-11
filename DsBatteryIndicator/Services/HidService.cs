@@ -179,8 +179,14 @@ public class HidService : IDisposable
     }
 
     /// <summary>
-    /// 向 DualSense 发送震动脉冲（低电量触觉反馈）。
-    /// DualSense USB 输出报告：ReportID=0x02, 右马达=byte[3], 左马达=byte[4]
+    /// 向 DualSense 发送震动脉冲+灯带变色（低电量触觉反馈）。
+    /// 参考 Linux 内核 hid-playstation.c:
+    /// 输出报告 48 字节（含 ReportID 0x02），payload 47 字节。
+    ///   byte[1] = valid_flag0 (rumble enable: bit0=右, bit1=左)
+    ///   byte[2] = valid_flag1 (bit1=0x02 启用灯带控制)
+    ///   byte[3] = 右握把马达 (0-255)
+    ///   byte[4] = 左握把马达 (0-255)
+    ///   byte[45]= R, byte[46]= G, byte[47]= B (灯带，ReportID+1 偏移)
     /// </summary>
     public void SendHapticPulse()
     {
@@ -188,42 +194,35 @@ public class HidService : IDisposable
 
         try
         {
-            // DualSense USB 输出报告（48 字节，含 Report ID 0x02）
-            byte[] outputReport = new byte[48];
-            outputReport[0] = 0x02;  // Report ID
-            outputReport[1] = 0x03;  // 启用震动 + 灯带
-            outputReport[3] = 128;   // 右握把马达 50% 强度（短暂脉冲）
-            outputReport[4] = 128;   // 左握把马达 50% 强度
+            byte[] report = new byte[48];
+            report[0] = 0x02;   // Report ID
+            report[1] = 0x03;   // valid_flag0: 启用左右马达
+            report[2] = 0x02;   // valid_flag1: 启用灯带控制 (DS_OUTPUT_VALID_FLAG2_LIGHTBAR_SETUP_CONTROL_ENABLE)
+            report[3] = 128;    // 右马达 50%
+            report[4] = 128;    // 左马达 50%
+            report[5] = 0x02;   // lightbar_setup: 允许外部控制发光 (DS_OUTPUT_LIGHTBAR_SETUP_LIGHT_OUT)
+            report[45] = 255;   // R
+            report[46] = 0;     // G
+            report[47] = 0;     // B
 
-            // 灯带变红（11 段 RGB，每段 3 字节）
-            for (int i = 0; i < 11; i++)
-            {
-                outputReport[11 + i * 3 + 0] = 255; // R
-                outputReport[11 + i * 3 + 1] = 0;   // G
-                outputReport[11 + i * 3 + 2] = 0;   // B
-            }
-            outputReport[45] = 0x05; // Player LED: 仅中间亮（5 号位）
+            _device.Write(report);
 
-            _device.Write(outputReport);
-
-            // 250ms 后停止震动，恢复灯带
+            // 250ms 后停止震动，恢复蓝色灯带
             Task.Delay(250).ContinueWith(_ =>
             {
                 try
                 {
-                    byte[] stopReport = new byte[48];
-                    stopReport[0] = 0x02;
-                    stopReport[1] = 0x03;
-                    // 马达 = 0（停止震动）
-                    // 灯带恢复蓝色
-                    for (int i = 0; i < 11; i++)
-                    {
-                        stopReport[11 + i * 3 + 0] = 0;
-                        stopReport[11 + i * 3 + 1] = 0;
-                        stopReport[11 + i * 3 + 2] = 255;
-                    }
-                    stopReport[45] = 0x05;
-                    _device?.Write(stopReport);
+                    byte[] stop = new byte[48];
+                    stop[0] = 0x02;
+                    stop[1] = 0x01;   // 仅左马达微震（柔和停止）
+                    stop[2] = 0x02;   // 保持灯带控制
+                    stop[3] = 0;
+                    stop[4] = 0;
+                    stop[5] = 0x02;
+                    stop[45] = 0;     // R
+                    stop[46] = 0;     // G
+                    stop[47] = 255;   // B（蓝色）
+                    _device?.Write(stop);
                 }
                 catch { }
             });

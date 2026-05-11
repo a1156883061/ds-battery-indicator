@@ -59,6 +59,11 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
         _rtssService = null;
     }
 
+    public void SendHapticTest()
+    {
+        _hidService.SendHapticPulse();
+    }
+
     public DeviceStatus Status
     {
         get => _status;
