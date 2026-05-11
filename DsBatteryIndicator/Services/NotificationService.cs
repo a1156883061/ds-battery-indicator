@@ -12,20 +12,12 @@ namespace DsBatteryIndicator.Services;
 /// </summary>
 public static class NotificationService
 {
-    private static DateTime _lastNotifyTime = DateTime.MinValue;
-    private static readonly TimeSpan MinNotifyInterval = TimeSpan.FromMinutes(2);
-
     /// <summary>
-    /// 触发低电量通知（三通道并行，2分钟内不重复）
+    /// 触发低电量通知（三通道并行，重复间隔由 MainViewModel Timer 控制）
     /// </summary>
     public static void NotifyLowBattery(int batteryLevel, System.Windows.Forms.NotifyIcon? trayIcon,
         HidService? hidService)
     {
-        // 防重复：2 分钟内不重复通知
-        if (DateTime.Now - _lastNotifyTime < MinNotifyInterval)
-            return;
-        _lastNotifyTime = DateTime.Now;
-
         Log($"触发低电量通知: {batteryLevel}%");
 
         // A: 托盘气泡
