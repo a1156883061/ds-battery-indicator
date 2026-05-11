@@ -193,10 +193,10 @@
         <Grid Margin="0,0,0,6">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="90"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="68"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="启用提示" VerticalAlignment="Center" FontSize="12" Margin="0,0,0,0"/>
-            <CheckBox x:Name="ChkAlertEnabled" Grid.Column="1" VerticalAlignment="Center"/>
+            <TextBlock Text="启用提示" VerticalAlignment="Center" FontSize="12"/>
+            <CheckBox x:Name="ChkAlertEnabled" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left"/>
         </Grid>
 
         <Grid Margin="0,0,0,6">
@@ -217,10 +217,10 @@
         <Grid Margin="0,0,0,6">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="90"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="68"/>
             </Grid.ColumnDefinitions>
             <TextBlock Text="重复提醒" VerticalAlignment="Center" FontSize="12"/>
-            <CheckBox x:Name="ChkRepeatEnabled" Grid.Column="1" VerticalAlignment="Center"/>
+            <CheckBox x:Name="ChkRepeatEnabled" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left"/>
         </Grid>
 
         <Grid Margin="0,0,0,4">
