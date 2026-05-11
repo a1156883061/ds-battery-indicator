@@ -181,11 +181,7 @@ public class HidService : IDisposable
     /// <summary>
     /// 向 DualSense 发送震动脉冲+灯带变色（低电量触觉反馈）。
     /// 参考 daidr/dualsense-tester outputStruct.ts payload 格式。
-    /// HidLibrary.Write() 需要包含 Report ID (0x02) 作为 byte[0]。
-    /// Payload 布局 (47 bytes after Report ID):
-    ///   [0]=validFlag0, [1]=validFlag1, [2]=右马达, [3]=左马达,
-    ///   [41]=lightbarSetup, [42]=ledBrightness, [43]=playerIndicator,
-    ///   [44]=R, [45]=G, [46]=B
+    /// validFlag1 bit2=1 触发灯带更新，bit3 保持 0。
     /// </summary>
     public void SendHapticPulse()
     {
@@ -194,37 +190,41 @@ public class HidService : IDisposable
         try
         {
             byte[] report = new byte[48];
-            report[0] = 0x02;   // Report ID (HidLibrary requires this)
+            report[0] = 0x02;   // Report ID
 
-            report[1] = 0x03;   // validFlag0: 启用左右马达
-            report[2] = 0xFB;   // validFlag1: 0xF7 | 0x04=bit2(灯带控制)
+            report[1] = 0x03;   // validFlag0: 启用左右马达(bit0+bit1)
+            report[2] = 0xF7;   // validFlag1: 默认值，bit2=1 已含
             report[3] = 255;    // 右马达
             report[4] = 255;    // 左马达
 
-            report[42] = 0x02;  // lightbarSetup (payload[41])
-            report[43] = 0x04;  // ledBrightness (payload[42])
-            report[44] = 0x05;  // playerIndicator (payload[43])
-            report[45] = 255;   // R (payload[44])
-            report[46] = 0;     // G (payload[45])
-            report[47] = 0;     // B (payload[46])
+            // 灯带：仅设置 RGB，不覆盖 lightbarSetup/ledBrightness
+            report[42] = 0x02;  // lightbarSetup: 启用外部控制
+            report[43] = 0x03;  // ledBrightness: 中等亮度（0-4）
+            report[44] = 0x04;  // playerIndicator: 中间 LED
+            report[45] = 255;   // R
+            report[46] = 0;     // G
+            report[47] = 0;     // B
 
             bool ok = _device.Write(report);
-            HapticLog($"发送 48byte: Write={ok}");
+            HapticLog($"红色灯带+震动: Write={ok}");
 
-            Task.Delay(250).ContinueWith(_ =>
+            // 800ms 后恢复蓝色灯带，停止震动
+            Task.Delay(800).ContinueWith(_ =>
             {
                 try
                 {
                     byte[] stop = new byte[48];
                     stop[0] = 0x02;
-                    stop[2] = 0xFB;
+                    stop[1] = 0x00;   // 马达停止
+                    stop[2] = 0xF7;   // 保持灯带控制位
                     stop[42] = 0x02;
-                    stop[43] = 0x04;
-                    stop[44] = 0x05;
+                    stop[43] = 0x03;
+                    stop[44] = 0x04;
                     stop[45] = 0;
                     stop[46] = 0;
                     stop[47] = 255;   // 蓝色
                     _device?.Write(stop);
+                    HapticLog("蓝色灯带+停止震动");
                 }
                 catch { }
             });
