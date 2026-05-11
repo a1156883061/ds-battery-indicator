@@ -91,6 +91,12 @@ public partial class MainWindow : Window
             Strings.SetLanguage(next);
         };
 
+        MenuHapticSettings.Click += (s, e) =>
+        {
+            var win = new HapticSettingsWindow { Owner = this };
+            win.ShowDialog();
+        };
+
         MenuTestNotify.Click += (s, e) =>
         {
             // 通过托盘气泡触发测试，验证三通道
@@ -137,6 +143,7 @@ public partial class MainWindow : Window
         MenuAutoStart.Header = Strings.AutoStart;
         MenuRtss.Header = Strings.RtssOverlay;
         MenuLanguage.Header = Strings.Language;
+        MenuHapticSettings.Header = Strings.HapticSettings;
         MenuTestNotify.Header = Strings.TestNotify;
         MenuAbout.Header = Strings.About;
         MenuExit.Header = Strings.Exit;

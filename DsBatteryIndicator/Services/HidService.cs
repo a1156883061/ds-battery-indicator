@@ -187,44 +187,70 @@ public class HidService : IDisposable
     {
         if (_device == null || !_device.IsConnected) return;
 
+        var cfg = AppSettings.Instance;
+        int intensity = Math.Clamp(cfg.HapticIntensity, 0, 255);
+        byte r = cfg.LightbarColorR;
+        byte g = cfg.LightbarColorG;
+        byte b = cfg.LightbarColorB;
+        int hapticMs = cfg.HapticDurationMs;
+        int lightbarMs = cfg.LightbarDurationMs;
+
         try
         {
             byte[] report = new byte[48];
-            report[0] = 0x02;   // Report ID
+            report[0] = 0x02;
+            report[1] = 0x03;        // validFlag0: 马达启用
+            report[2] = 0xF7;        // validFlag1
+            report[3] = (byte)intensity;  // 右马达
+            report[4] = (byte)intensity;  // 左马达
 
-            report[1] = 0x03;   // validFlag0: 启用左右马达(bit0+bit1)
-            report[2] = 0xF7;   // validFlag1: 默认值，bit2=1 已含
-            report[3] = 255;    // 右马达
-            report[4] = 255;    // 左马达
+            report[42] = 0x02;       // lightbarSetup
+            report[43] = 0x03;       // ledBrightness
+            report[44] = 0x04;       // playerIndicator
+            report[45] = r;          // R
+            report[46] = g;          // G
+            report[47] = b;          // B
 
-            // 灯带：仅设置 RGB，不覆盖 lightbarSetup/ledBrightness
-            report[42] = 0x02;  // lightbarSetup: 启用外部控制
-            report[43] = 0x03;  // ledBrightness: 中等亮度（0-4）
-            report[44] = 0x04;  // playerIndicator: 中间 LED
-            report[45] = 255;   // R
-            report[46] = 0;     // G
-            report[47] = 0;     // B
+            _device.Write(report);
+            HapticLog($"震动+灯带: intensity={intensity}, RGB=({r},{g},{b}), haptic={hapticMs}ms, lightbar={lightbarMs}ms");
 
-            bool ok = _device.Write(report);
-            HapticLog($"红色灯带+震动: Write={ok}");
-
-            // 800ms 后恢复蓝色灯带，停止震动
-            Task.Delay(800).ContinueWith(_ =>
+            // 震动先停（按配置时间）
+            Task.Delay(hapticMs).ContinueWith(_ =>
             {
                 try
                 {
-                    byte[] stop = new byte[48];
-                    stop[0] = 0x02;
-                    stop[1] = 0x00;   // 马达停止
-                    stop[2] = 0xF7;   // 保持灯带控制位
-                    stop[42] = 0x02;
-                    stop[43] = 0x03;
-                    stop[44] = 0x04;
-                    stop[45] = 0;
-                    stop[46] = 0;
-                    stop[47] = 255;   // 蓝色
-                    _device?.Write(stop);
-                    HapticLog("蓝色灯带+停止震动");
+                    byte[] stopMotor = new byte[48];
+                    stopMotor[0] = 0x02;
+                    stopMotor[1] = 0x00;    // 马达停
+                    stopMotor[2] = 0xF7;
+                    stopMotor[42] = 0x02;
+                    stopMotor[43] = 0x03;
+                    stopMotor[44] = 0x04;
+                    stopMotor[45] = r;
+                    stopMotor[46] = g;
+                    stopMotor[47] = b;      // 保持灯带颜色
+                    _device?.Write(stopMotor);
+                    HapticLog("震动停止，灯带保持");
+                }
+                catch { }
+            });
+
+            // 灯带后恢复蓝色（按配置时间）
+            Task.Delay(lightbarMs).ContinueWith(_ =>
+            {
+                try
+                {
+                    byte[] restore = new byte[48];
+                    restore[0] = 0x02;
+                    restore[2] = 0xF7;
+                    restore[42] = 0x02;
+                    restore[43] = 0x03;
+                    restore[44] = 0x04;
+                    restore[45] = 0;
+                    restore[46] = 0;
+                    restore[47] = 255;      // 恢复蓝色
+                    _device?.Write(restore);
+                    HapticLog("灯带恢复蓝色");
                 }
                 catch { }
             });

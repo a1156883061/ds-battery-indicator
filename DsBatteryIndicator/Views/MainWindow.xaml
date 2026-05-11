@@ -47,6 +47,7 @@
             <MenuItem x:Name="MenuRtss" IsCheckable="True"/>
             <MenuItem x:Name="MenuLanguage" />
             <Separator/>
+            <MenuItem x:Name="MenuHapticSettings"/>
             <MenuItem x:Name="MenuTestNotify"/>
             <Separator/>
             <MenuItem x:Name="MenuAbout"/>

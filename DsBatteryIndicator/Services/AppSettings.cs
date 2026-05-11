@@ -37,6 +37,14 @@ public class AppSettings
     public bool Topmost { get; set; } = true;
     public bool RtssEnabled { get; set; } = false;
 
+    // 震动/灯带配置
+    public int HapticDurationMs { get; set; } = 800;
+    public int HapticIntensity { get; set; } = 255;
+    public int LightbarDurationMs { get; set; } = 3000;
+    public byte LightbarColorR { get; set; } = 255;
+    public byte LightbarColorG { get; set; } = 0;
+    public byte LightbarColorB { get; set; } = 0;
+
     public void Save()
     {
         string dir = Path.GetDirectoryName(FilePath)!;

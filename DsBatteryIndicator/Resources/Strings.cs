@@ -20,6 +20,7 @@ public static class Strings
             ["Exit"] = "退出",
             ["ShowHide"] = "隐藏",
             ["RtssOverlay"] = "RTSS 叠加",
+            ["HapticSettings"] = "震动/灯带设置",
             ["TestNotify"] = "测试通知",
             ["Show"] = "显示",
             ["Hide"] = "隐藏",
@@ -39,6 +40,7 @@ public static class Strings
             ["Exit"] = "Exit",
             ["ShowHide"] = "Hide",
             ["RtssOverlay"] = "RTSS Overlay",
+            ["HapticSettings"] = "Haptic/Lightbar Settings",
             ["TestNotify"] = "Test Notification",
             ["Show"] = "Show",
             ["Hide"] = "Hide",
@@ -104,6 +106,7 @@ public static class Strings
     public static string Exit => Get("Exit");
     public static string ShowHide => Get("ShowHide");
     public static string RtssOverlay => Get("RtssOverlay");
+    public static string HapticSettings => Get("HapticSettings");
     public static string TestNotify => Get("TestNotify");
     public static string Show => Get("Show");
     public static string Hide => Get("Hide");
