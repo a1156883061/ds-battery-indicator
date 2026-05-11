@@ -42,7 +42,6 @@ public partial class HapticSettingsWindow : Window
         SliderThreshold.Value = cfg.LowBatteryThreshold;
         TxtThreshold.Text = cfg.LowBatteryThreshold.ToString();
         ChkRepeatEnabled.IsChecked = cfg.LowBatteryRepeatEnabled;
-        SliderRepeatInterval.Value = cfg.LowBatteryRepeatIntervalMs / 1000;
         TxtRepeatInterval.Text = (cfg.LowBatteryRepeatIntervalMs / 1000).ToString();
 
         // 滑块 ↔ 输入框 双向同步
@@ -50,12 +49,14 @@ public partial class HapticSettingsWindow : Window
         BindSlider(SliderHapticTime, TxtHapticTime, 100, 3000);
         BindSlider(SliderLightTime, TxtLightTime, 500, 10000);
         BindSlider(SliderThreshold, TxtThreshold, 10, 90);
-        BindSlider(SliderRepeatInterval, TxtRepeatInterval, 15, 3600);
 
         // RGB 输入验证
         BindRgbInput(TxtR);
         BindRgbInput(TxtG);
         BindRgbInput(TxtB);
+
+        // 预设间隔按钮
+        InitRepeatIntervalButtons();
 
         // 测试按钮
         BtnTest.Click += (s, e) =>
@@ -140,6 +141,28 @@ public partial class HapticSettingsWindow : Window
         LblRepeatInterval.Text = Strings.RepeatInterval;
     }
 
+    private void InitRepeatIntervalButtons()
+    {
+        StyleBtn(BtnInterval300);
+        StyleBtn(BtnInterval600);
+        StyleBtn(BtnInterval1800);
+        StyleBtn(BtnInterval3600);
+    }
+
+    private static void StyleBtn(System.Windows.Controls.Button btn)
+    {
+        btn.Background = new SolidColorBrush(Color.FromRgb(0x2A, 0x2A, 0x3E));
+        btn.Foreground = new SolidColorBrush(Color.FromRgb(0xD0, 0xD0, 0xD8));
+        btn.BorderBrush = new SolidColorBrush(Color.FromRgb(0x3A, 0x3A, 0x45));
+        btn.BorderThickness = new Thickness(1);
+    }
+
+    private void PresetInterval_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is System.Windows.Controls.Button btn && int.TryParse(btn.Tag?.ToString(), out int val))
+            TxtRepeatInterval.Text = val.ToString();
+    }
+
     private void ApplyToConfig()
     {
         var cfg = AppSettings.Instance;
@@ -153,7 +176,7 @@ public partial class HapticSettingsWindow : Window
         cfg.LowBatteryAlertEnabled = ChkAlertEnabled.IsChecked == true;
         cfg.LowBatteryThreshold = ClampInt(TxtThreshold.Text, 10, 90);
         cfg.LowBatteryRepeatEnabled = ChkRepeatEnabled.IsChecked == true;
-        cfg.LowBatteryRepeatIntervalMs = ClampInt(TxtRepeatInterval.Text, 15, 86400) * 1000;
+        cfg.LowBatteryRepeatIntervalMs = Math.Max(1, ClampInt(TxtRepeatInterval.Text, 1, int.MaxValue)) * 1000;
     }
 
     private static int ClampInt(string text, int min, int max)
