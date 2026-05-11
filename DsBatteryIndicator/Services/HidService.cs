@@ -180,8 +180,12 @@ public class HidService : IDisposable
 
     /// <summary>
     /// 向 DualSense 发送震动脉冲+灯带变色（低电量触觉反馈）。
-    /// 参考 daidr/dualsense-tester outputStruct.ts 的 47 字节 payload 格式
-    /// HidLibrary.WriteReport() 自动处理 Report ID，故数据不含 Report ID 字节
+    /// 参考 daidr/dualsense-tester outputStruct.ts payload 格式。
+    /// HidLibrary.Write() 需要包含 Report ID (0x02) 作为 byte[0]。
+    /// Payload 布局 (47 bytes after Report ID):
+    ///   [0]=validFlag0, [1]=validFlag1, [2]=右马达, [3]=左马达,
+    ///   [41]=lightbarSetup, [42]=ledBrightness, [43]=playerIndicator,
+    ///   [44]=R, [45]=G, [46]=B
     /// </summary>
     public void SendHapticPulse()
     {
@@ -189,49 +193,37 @@ public class HidService : IDisposable
 
         try
         {
-            // 47 字节 payload（不含 Report ID，HidLibrary 自动添加）
-            byte[] report = new byte[47];
+            byte[] report = new byte[48];
+            report[0] = 0x02;   // Report ID (HidLibrary requires this)
 
-            // payload[0]: validFlag0 (bit0=右马达, bit1=左马达)
-            report[0] = 0x03;
+            report[1] = 0x03;   // validFlag0: 启用左右马达
+            report[2] = 0xFB;   // validFlag1: 0xF7 | 0x04=bit2(灯带控制)
+            report[3] = 255;    // 右马达
+            report[4] = 255;    // 左马达
 
-            // payload[1]: validFlag1 (默认 0xF7 | bit2=0x04 灯带控制)
-            report[1] = 0xFB;
+            report[42] = 0x02;  // lightbarSetup (payload[41])
+            report[43] = 0x04;  // ledBrightness (payload[42])
+            report[44] = 0x05;  // playerIndicator (payload[43])
+            report[45] = 255;   // R (payload[44])
+            report[46] = 0;     // G (payload[45])
+            report[47] = 0;     // B (payload[46])
 
-            // payload[2-3]: 马达
-            report[2] = 255;    // 右马达
-            report[3] = 255;    // 左马达
+            bool ok = _device.Write(report);
+            HapticLog($"发送 48byte: Write={ok}");
 
-            // payload[41]: lightbarSetup
-            report[41] = 0x02;
-
-            // payload[42]: ledBrightness
-            report[42] = 0x04;
-
-            // payload[43]: playerIndicator
-            report[43] = 0x05;
-
-            // payload[44-46]: RGB
-            report[44] = 255;   // R
-            report[45] = 0;     // G
-            report[46] = 0;     // B
-
-            HapticLog($"[Haptic] 发送输出报告: 47字节, Write={_device.Write(report)}");
-
-            // 250ms 后恢复蓝色灯带
             Task.Delay(250).ContinueWith(_ =>
             {
                 try
                 {
-                    byte[] stop = new byte[47];
-                    stop[0] = 0x00;
-                    stop[1] = 0xFB;
-                    stop[41] = 0x02;
-                    stop[42] = 0x04;
-                    stop[43] = 0x05;
-                    stop[44] = 0;
+                    byte[] stop = new byte[48];
+                    stop[0] = 0x02;
+                    stop[2] = 0xFB;
+                    stop[42] = 0x02;
+                    stop[43] = 0x04;
+                    stop[44] = 0x05;
                     stop[45] = 0;
-                    stop[46] = 255;   // 蓝色
+                    stop[46] = 0;
+                    stop[47] = 255;   // 蓝色
                     _device?.Write(stop);
                 }
                 catch { }
@@ -239,7 +231,7 @@ public class HidService : IDisposable
         }
         catch (Exception ex)
         {
-            HapticLog($"[Haptic] 异常: {ex.Message}");
+            HapticLog($"异常: {ex.Message}");
         }
     }
 
