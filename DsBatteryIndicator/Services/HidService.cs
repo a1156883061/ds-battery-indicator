@@ -180,15 +180,8 @@ public class HidService : IDisposable
 
     /// <summary>
     /// 向 DualSense 发送震动脉冲+灯带变色（低电量触觉反馈）。
-    /// 参考 daidr/dualsense-tester outputStruct.ts 格式:
-    /// 输出报告 48 字节（含 ReportID 0x02），payload 47 字节。
-    ///   payload[0]=validFlag0 (bit0=右马达, bit1=左马达)
-    ///   payload[1]=validFlag1 (默认 0xF7, bit2=0x04 启用灯带)
-    ///   payload[2]=右马达, payload[3]=左马达
-    ///   payload[41]=lightbarSetup, payload[42]=ledBrightness
-    ///   payload[43]=playerIndicator
-    ///   payload[44]=R, payload[45]=G, payload[46]=B
-    ///   (HidLibrary 含 ReportID，故所有 payload 偏移 +1)
+    /// 参考 daidr/dualsense-tester outputStruct.ts 的 47 字节 payload 格式
+    /// HidLibrary.WriteReport() 自动处理 Report ID，故数据不含 Report ID 字节
     /// </summary>
     public void SendHapticPulse()
     {
@@ -196,58 +189,70 @@ public class HidService : IDisposable
 
         try
         {
-            byte[] report = new byte[48];
-            report[0] = 0x02;   // Report ID
+            // 47 字节 payload（不含 Report ID，HidLibrary 自动添加）
+            byte[] report = new byte[47];
 
-            // validFlag0 (payload[0]): 启用左右马达震动
-            report[1] = 0x03;   // bit0=右马达, bit1=左马达
+            // payload[0]: validFlag0 (bit0=右马达, bit1=左马达)
+            report[0] = 0x03;
 
-            // validFlag1 (payload[1]): 默认 0xF7, bit2=0x04 启用灯带控制
-            report[2] = 0xFB;   // 0xF7 | 0x04 = 0xFB (启用灯带bit2)
+            // payload[1]: validFlag1 (默认 0xF7 | bit2=0x04 灯带控制)
+            report[1] = 0xFB;
 
-            // 马达 (payload[2-3])
-            report[3] = 255;    // 右马达 100%
-            report[4] = 255;    // 左马达 100%
+            // payload[2-3]: 马达
+            report[2] = 255;    // 右马达
+            report[3] = 255;    // 左马达
 
-            // 跳过音频和自适应扳机字段 (payload[4-40] = 0)
+            // payload[41]: lightbarSetup
+            report[41] = 0x02;
 
-            // lightbarSetup (payload[41])
-            report[42] = 0x02;   // 启用灯带外部控制
+            // payload[42]: ledBrightness
+            report[42] = 0x04;
 
-            // ledBrightness (payload[42])
-            report[43] = 0x04;   // 亮度等级 4 (最高)
+            // payload[43]: playerIndicator
+            report[43] = 0x05;
 
-            // playerIndicator (payload[43])
-            report[44] = 0x05;   // 中间 LED 亮
+            // payload[44-46]: RGB
+            report[44] = 255;   // R
+            report[45] = 0;     // G
+            report[46] = 0;     // B
 
-            // LED RGB (payload[44-46])
-            report[45] = 255;    // R
-            report[46] = 0;      // G
-            report[47] = 0;      // B
+            HapticLog($"[Haptic] 发送输出报告: 47字节, Write={_device.Write(report)}");
 
-            _device.Write(report);
-
-            // 250ms 后停止震动，恢复蓝色灯带
+            // 250ms 后恢复蓝色灯带
             Task.Delay(250).ContinueWith(_ =>
             {
                 try
                 {
-                    byte[] stop = new byte[48];
-                    stop[0] = 0x02;
-                    stop[1] = 0x00;   // 马达停止
-                    stop[2] = 0xFB;   // 保持灯带控制位
-                    stop[3] = 0;
-                    stop[4] = 0;
-                    stop[42] = 0x02;
-                    stop[43] = 0x04;
-                    stop[44] = 0x05;
-                    stop[45] = 0;     // R
-                    stop[46] = 0;     // G
-                    stop[47] = 255;   // B
+                    byte[] stop = new byte[47];
+                    stop[0] = 0x00;
+                    stop[1] = 0xFB;
+                    stop[41] = 0x02;
+                    stop[42] = 0x04;
+                    stop[43] = 0x05;
+                    stop[44] = 0;
+                    stop[45] = 0;
+                    stop[46] = 255;   // 蓝色
                     _device?.Write(stop);
                 }
                 catch { }
             });
+        }
+        catch (Exception ex)
+        {
+            HapticLog($"[Haptic] 异常: {ex.Message}");
+        }
+    }
+
+    private static void HapticLog(string msg)
+    {
+        try
+        {
+            string path = System.IO.Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "DsBatteryIndicator", "haptic.log");
+            string dir = System.IO.Path.GetDirectoryName(path)!;
+            System.IO.Directory.CreateDirectory(dir);
+            System.IO.File.AppendAllText(path, $"{DateTime.Now:HH:mm:ss.fff} {msg}\n");
         }
         catch { }
     }
