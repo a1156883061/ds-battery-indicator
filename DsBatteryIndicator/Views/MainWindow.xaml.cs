@@ -102,7 +102,7 @@ public partial class MainWindow : Window
             // 通过托盘气泡触发测试，验证三通道
             _viewModel.TrayIcon?.ShowBalloonTip(3000, Strings.AppName,
                 "测试通知：托盘气泡+提示音+手柄震动",
-                System.Windows.Forms.ToolTipIcon.Info);
+                System.Windows.Forms.ToolTipIcon.None);
             System.Media.SystemSounds.Exclamation.Play();
             _viewModel.SendHapticTest();
             MessageBox.Show("三通道测试触发完成：\n• 托盘气泡\n• 提示音\n• 手柄震动+灯带",
