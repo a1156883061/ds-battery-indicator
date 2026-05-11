@@ -23,10 +23,16 @@ public partial class App : Application
 
         _mainWindow = new MainWindow();
         _mainWindow.ViewModel.TrayIcon = _notifyIcon;
-        _mainWindow.Show();
+        if (AppSettings.Instance.WindowVisible)
+            _mainWindow.Show();
 
         _mainWindow.ViewModel.PropertyChanged += OnViewModelPropertyChanged;
-        _mainWindow.IsVisibleChanged += (s, e) => UpdateTrayShowHideText();
+        _mainWindow.IsVisibleChanged += (s, e) =>
+        {
+            UpdateTrayShowHideText();
+            AppSettings.Instance.WindowVisible = _mainWindow.IsVisible;
+            AppSettings.Instance.Save();
+        };
         Strings.LanguageChanged += () => UpdateTrayShowHideText();
 
         UpdateTrayShowHideText();

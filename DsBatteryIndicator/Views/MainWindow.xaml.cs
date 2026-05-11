@@ -124,6 +124,7 @@ public partial class MainWindow : Window
         {
             e.Cancel = true;
             Hide();
+            AppSettings.Instance.WindowVisible = false;
             AppSettings.Instance.WindowLeft = Left;
             AppSettings.Instance.WindowTop = Top;
             AppSettings.Instance.Save();
@@ -134,6 +135,8 @@ public partial class MainWindow : Window
     {
         Show();
         Activate();
+        AppSettings.Instance.WindowVisible = true;
+        AppSettings.Instance.Save();
     }
 
     private void UpdateMenuTexts()
