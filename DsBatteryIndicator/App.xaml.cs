@@ -55,7 +55,6 @@ public partial class App : Application
         else
         {
             _mainWindow.ShowWindow();
-            // ShowWindow 内部已保存 WindowVisible=true
         }
 
         AppSettings.Instance.Save();
@@ -92,6 +91,8 @@ public partial class App : Application
         });
         contextMenu.Items.Add(Strings.Exit, null, (s, e) =>
         {
+            AppSettings.Instance.WindowVisible = _mainWindow?.IsVisible ?? false;
+            AppSettings.Instance.Save();
             _notifyIcon?.Dispose();
             Shutdown();
         });
