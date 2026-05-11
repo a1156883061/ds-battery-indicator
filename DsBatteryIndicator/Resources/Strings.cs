@@ -29,6 +29,22 @@ public static class Strings
             ["LowBattery"] = "电量不足",
             ["Toast_LowBattery"] = "DualSense 电量不足 ({0}%)，请充电",
             ["About_Text"] = "DS 电池指示器 v1.0\n显示 DualSense 手柄电量",
+            // 设置窗口
+            ["SettingsTitle"] = "震动 / 灯带设置",
+            ["HapticIntensity"] = "震动强度",
+            ["HapticDuration"] = "震动时间",
+            ["LightbarDuration"] = "灯带时间",
+            ["LightbarColor"] = "灯带颜色",
+            ["LowBatterySection"] = "电量不足提示",
+            ["AlertEnabled"] = "启用提示",
+            ["AlertThreshold"] = "电量阈值",
+            ["RepeatEnabled"] = "重复提醒",
+            ["RepeatInterval"] = "提醒间隔",
+            ["BtnTest"] = "测试",
+            ["BtnSave"] = "保存",
+            // 测试通知
+            ["TestNotifyText"] = "测试通知：托盘气泡+提示音+手柄震动",
+            ["TestNotifyResult"] = "三通道测试触发完成：\n• 托盘气泡\n• 提示音\n• 手柄震动+灯带",
         },
         ["en"] = new()
         {
@@ -49,6 +65,20 @@ public static class Strings
             ["LowBattery"] = "Low Battery",
             ["Toast_LowBattery"] = "DualSense battery low ({0}%), please charge",
             ["About_Text"] = "DS Battery Indicator v1.0\nDisplay DualSense controller battery level",
+            ["SettingsTitle"] = "Haptic / Lightbar Settings",
+            ["HapticIntensity"] = "Intensity",
+            ["HapticDuration"] = "Duration",
+            ["LightbarDuration"] = "Lightbar Time",
+            ["LightbarColor"] = "Lightbar Color",
+            ["LowBatterySection"] = "Low Battery Alert",
+            ["AlertEnabled"] = "Alert Enabled",
+            ["AlertThreshold"] = "Threshold",
+            ["RepeatEnabled"] = "Repeat",
+            ["RepeatInterval"] = "Interval",
+            ["BtnTest"] = "Test",
+            ["BtnSave"] = "Save",
+            ["TestNotifyText"] = "Test: tray bubble + sound + controller haptic",
+            ["TestNotifyResult"] = "Test triggered:\n* Tray bubble\n* Alert sound\n* Controller haptic + lightbar",
         },
     };
 
@@ -115,6 +145,20 @@ public static class Strings
     public static string LowBattery => Get("LowBattery");
     public static string Toast_LowBattery => Get("Toast_LowBattery");
     public static string About_Text => Get("About_Text");
+    public static string SettingsTitle => Get("SettingsTitle");
+    public static string HapticIntensity => Get("HapticIntensity");
+    public static string HapticDuration => Get("HapticDuration");
+    public static string LightbarDuration => Get("LightbarDuration");
+    public static string LightbarColor => Get("LightbarColor");
+    public static string LowBatterySection => Get("LowBatterySection");
+    public static string AlertEnabled => Get("AlertEnabled");
+    public static string AlertThreshold => Get("AlertThreshold");
+    public static string RepeatEnabled => Get("RepeatEnabled");
+    public static string RepeatInterval => Get("RepeatInterval");
+    public static string BtnTest => Get("BtnTest");
+    public static string BtnSave => Get("BtnSave");
+    public static string TestNotifyText => Get("TestNotifyText");
+    public static string TestNotifyResult => Get("TestNotifyResult");
 
     private static string Get(string key)
     {

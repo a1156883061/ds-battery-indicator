@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
+using DsBatteryIndicator.Resources;
 using DsBatteryIndicator.Services;
 
 namespace DsBatteryIndicator.Views;
@@ -12,6 +13,13 @@ public partial class HapticSettingsWindow : Window
     public HapticSettingsWindow()
     {
         InitializeComponent();
+
+        Title = Strings.SettingsTitle;
+        BtnTest.Content = Strings.BtnTest;
+        BtnSave.Content = Strings.BtnSave;
+
+        // XAML 标签本地化
+        InitLocalization();
 
         var cfg = AppSettings.Instance;
 
@@ -116,6 +124,20 @@ public partial class HapticSettingsWindow : Window
             val = Math.Clamp(val, 0, 255);
             textBox.Text = val.ToString();
         };
+    }
+
+    private void InitLocalization()
+    {
+        LblTitle.Text = Strings.SettingsTitle;
+        LblHapticIntensity.Text = Strings.HapticIntensity;
+        LblHapticDuration.Text = Strings.HapticDuration;
+        LblLightbarDuration.Text = Strings.LightbarDuration;
+        LblLightbarColor.Text = Strings.LightbarColor;
+        LblLowBatterySection.Text = Strings.LowBatterySection;
+        LblAlertEnabled.Text = Strings.AlertEnabled;
+        LblAlertThreshold.Text = Strings.AlertThreshold;
+        LblRepeatEnabled.Text = Strings.RepeatEnabled;
+        LblRepeatInterval.Text = Strings.RepeatInterval;
     }
 
     private void ApplyToConfig()
