@@ -6,3 +6,4 @@ obj/
 *.sln.docstates
 .vs/
 .superpowers/
+publish/
