@@ -14,7 +14,7 @@ public partial class HapticSettingsWindow : Window
     {
         InitializeComponent();
 
-        Title = Strings.SettingsTitle;
+        Title = Strings.HapticSettings;
         BtnTest.Content = Strings.BtnTest;
         BtnSave.Content = Strings.BtnSave;
 
@@ -126,7 +126,7 @@ public partial class HapticSettingsWindow : Window
 
     private void InitLocalization()
     {
-        LblTitle.Text = Strings.SettingsTitle;
+        LblTitle.Text = Strings.HapticSettings;
         LblHapticIntensity.Text = Strings.HapticIntensity;
         LblHapticDuration.Text = Strings.HapticDuration;
         LblLightbarDuration.Text = Strings.LightbarDuration;

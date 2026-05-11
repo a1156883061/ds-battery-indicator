@@ -132,14 +132,16 @@
             <TextBlock x:Name="LblHapticDuration" Grid.Row="2" Grid.Column="0"
                        VerticalAlignment="Center" FontSize="12"/>
             <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                <Button x:Name="BtnHaptic200" Content="200ms" Tag="200" Width="50" Height="22" FontSize="11"
+                <Button x:Name="BtnHaptic200" Content="200ms" Tag="200" Width="46" Height="22" FontSize="11"
                         Margin="0,0,4,0" Cursor="Hand" Click="PresetHapticTime_Click"/>
-                <Button x:Name="BtnHaptic500" Content="500ms" Tag="500" Width="50" Height="22" FontSize="11"
+                <Button x:Name="BtnHaptic500" Content="500ms" Tag="500" Width="46" Height="22" FontSize="11"
                         Margin="0,0,4,0" Cursor="Hand" Click="PresetHapticTime_Click"/>
-                <Button x:Name="BtnHaptic800" Content="800ms" Tag="800" Width="50" Height="22" FontSize="11"
+                <Button x:Name="BtnHaptic800" Content="800ms" Tag="800" Width="46" Height="22" FontSize="11"
                         Margin="0,0,4,0" Cursor="Hand" Click="PresetHapticTime_Click"/>
-                <Button x:Name="BtnHaptic1000" Content="1s" Tag="1000" Width="36" Height="22" FontSize="11"
+                <Button x:Name="BtnHaptic1000" Content="1s" Tag="1000" Width="46" Height="22" FontSize="11"
                         Margin="0,0,8,0" Cursor="Hand" Click="PresetHapticTime_Click"/>
+            </StackPanel>
+            <StackPanel Grid.Row="2" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
                 <TextBox x:Name="TxtHapticTime" Style="{StaticResource NumInput}" Width="42"/>
                 <TextBlock Text="ms" FontSize="10" Foreground="#808088" VerticalAlignment="Center" Margin="3,0,0,0"/>
             </StackPanel>
@@ -148,14 +150,17 @@
             <TextBlock x:Name="LblLightbarDuration" Grid.Row="4" Grid.Column="0"
                        VerticalAlignment="Center" FontSize="12"/>
             <StackPanel Grid.Row="4" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                <Button x:Name="BtnLight1000" Content="1s" Tag="1000" Width="36" Height="22" FontSize="11"
+                <Button x:Name="BtnLight1000" Content="1s" Tag="1000" Width="46" Height="22" FontSize="11"
                         Margin="0,0,4,0" Cursor="Hand" Click="PresetLightTime_Click"/>
-                <Button x:Name="BtnLight3000" Content="3s" Tag="3000" Width="36" Height="22" FontSize="11"
+                <Button x:Name="BtnLight3000" Content="3s" Tag="3000" Width="46" Height="22" FontSize="11"
                         Margin="0,0,4,0" Cursor="Hand" Click="PresetLightTime_Click"/>
-                <Button x:Name="BtnLight5000" Content="5s" Tag="5000" Width="36" Height="22" FontSize="11"
+                <Button x:Name="BtnLight5000" Content="5s" Tag="5000" Width="46" Height="22" FontSize="11"
                         Margin="0,0,4,0" Cursor="Hand" Click="PresetLightTime_Click"/>
-                <Button x:Name="BtnLight10000" Content="10s" Tag="10000" Width="40" Height="22" FontSize="11"
+                <Button x:Name="BtnLight10000" Content="10s" Tag="10000" Width="46" Height="22" FontSize="11"
                         Margin="0,0,8,0" Cursor="Hand" Click="PresetLightTime_Click"/>
+            </StackPanel>
+
+            <StackPanel Grid.Row="4" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
                 <TextBox x:Name="TxtLightTime" Style="{StaticResource NumInput}" Width="42"/>
                 <TextBlock Text="ms" FontSize="10" Foreground="#808088" VerticalAlignment="Center" Margin="3,0,0,0"/>
             </StackPanel>
