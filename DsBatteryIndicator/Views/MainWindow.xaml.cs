@@ -48,6 +48,12 @@ public partial class MainWindow : Window
         _isAutoStart = AppSettings.Instance.AutoStart;
         MenuAutoStart.IsChecked = _isAutoStart;
 
+        // 恢复 RTSS 状态
+        bool rtssEnabled = AppSettings.Instance.RtssEnabled;
+        MenuRtss.IsChecked = rtssEnabled;
+        if (rtssEnabled)
+            _viewModel.EnableRtss();
+
         // 本地化菜单
         UpdateMenuTexts();
         Strings.LanguageChanged += UpdateMenuTexts;
@@ -66,6 +72,17 @@ public partial class MainWindow : Window
             _isAutoStart = !_isAutoStart;
             MenuAutoStart.IsChecked = _isAutoStart;
             SetAutoStart(_isAutoStart);
+        };
+
+        MenuRtss.Click += (s, e) =>
+        {
+            bool enable = MenuRtss.IsChecked;
+            AppSettings.Instance.RtssEnabled = enable;
+            AppSettings.Instance.Save();
+            if (enable)
+                _viewModel.EnableRtss();
+            else
+                _viewModel.DisableRtss();
         };
 
         MenuLanguage.Click += (s, e) =>
@@ -106,6 +123,7 @@ public partial class MainWindow : Window
         MenuHide.Header = Strings.ShowHide;
         MenuTopmost.Header = Strings.Topmost;
         MenuAutoStart.Header = Strings.AutoStart;
+        MenuRtss.Header = Strings.RtssOverlay;
         MenuLanguage.Header = Strings.Language;
         MenuAbout.Header = Strings.About;
         MenuExit.Header = Strings.Exit;

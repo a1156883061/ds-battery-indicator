@@ -59,7 +59,7 @@
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="20"/>
                                 </Grid.ColumnDefinitions>
 
                                 <!-- 文字（左对齐） -->
@@ -67,23 +67,33 @@
                                                   ContentSource="Header"
                                                   TextBlock.Foreground="{TemplateBinding Foreground}"
                                                   RecognizesAccessKey="True"
-                                                  VerticalAlignment="Center"/>
+                                                  VerticalAlignment="Center"
+                                                  Margin="0,0,10,0"/>
 
-                                <!-- 勾选图标（右对齐） -->
-                                <Path Name="CheckMark" Grid.Column="1"
-                                      Data="M2,6 L5,9 L12,2"
-                                      Stroke="{StaticResource MenuCheckColor}"
-                                      StrokeThickness="2"
-                                      StrokeStartLineCap="Round" StrokeEndLineCap="Round"
-                                      Width="14" Height="10" Stretch="Uniform"
-                                      VerticalAlignment="Center" Margin="6,0,0,0"
-                                      Visibility="Collapsed"/>
+                                <!-- 标记区：仅 IsCheckable 项可见，未选 —，已选 ✓ -->
+                                <Grid Name="MarkArea" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <TextBlock Name="DashMark"
+                                               Text="—"
+                                               Foreground="{StaticResource MenuMutedText}"
+                                               FontSize="11"/>
+                                    <Path Name="CheckMark"
+                                          Data="M2,6 L5,9 L12,2"
+                                          Stroke="{StaticResource MenuCheckColor}"
+                                          StrokeThickness="2"
+                                          StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                          Width="14" Height="10" Stretch="Uniform"
+                                          Visibility="Collapsed"/>
+                                </Grid>
                             </Grid>
                         </Border>
 
                         <ControlTemplate.Triggers>
+                            <Trigger Property="IsCheckable" Value="False">
+                                <Setter TargetName="MarkArea" Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
                             <Trigger Property="IsChecked" Value="True">
                                 <Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="DashMark" Property="Visibility" Value="Collapsed"/>
                             </Trigger>
                             <Trigger Property="IsHighlighted" Value="True">
                                 <Setter TargetName="ItemBorder" Property="Background" Value="{StaticResource MenuHoverBg}"/>

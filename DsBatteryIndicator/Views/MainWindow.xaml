@@ -44,6 +44,7 @@
             <MenuItem x:Name="MenuHide"/>
             <MenuItem x:Name="MenuTopmost" IsCheckable="True" IsChecked="True"/>
             <MenuItem x:Name="MenuAutoStart" IsCheckable="True"/>
+            <MenuItem x:Name="MenuRtss" IsCheckable="True"/>
             <MenuItem x:Name="MenuLanguage" />
             <Separator/>
             <MenuItem x:Name="MenuAbout"/>

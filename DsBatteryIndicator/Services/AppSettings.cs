@@ -35,6 +35,7 @@ public class AppSettings
     public bool AutoStart { get; set; }
     public string Language { get; set; } = "zh-CN";
     public bool Topmost { get; set; } = true;
+    public bool RtssEnabled { get; set; } = false;
 
     public void Save()
     {

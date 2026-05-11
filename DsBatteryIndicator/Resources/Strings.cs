@@ -19,6 +19,7 @@ public static class Strings
             ["About"] = "关于",
             ["Exit"] = "退出",
             ["ShowHide"] = "隐藏",
+            ["RtssOverlay"] = "RTSS 叠加",
             ["Show"] = "显示",
             ["Hide"] = "隐藏",
             ["Disconnected"] = "未连接",
@@ -36,6 +37,7 @@ public static class Strings
             ["About"] = "About",
             ["Exit"] = "Exit",
             ["ShowHide"] = "Hide",
+            ["RtssOverlay"] = "RTSS Overlay",
             ["Show"] = "Show",
             ["Hide"] = "Hide",
             ["Disconnected"] = "Disconnected",
@@ -99,6 +101,7 @@ public static class Strings
     public static string About => Get("About");
     public static string Exit => Get("Exit");
     public static string ShowHide => Get("ShowHide");
+    public static string RtssOverlay => Get("RtssOverlay");
     public static string Show => Get("Show");
     public static string Hide => Get("Hide");
     public static string Disconnected => Get("Disconnected");
