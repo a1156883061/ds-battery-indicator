@@ -19,14 +19,16 @@ public partial class App : Application
         Strings.DetectLanguage();
         NotificationService.EnsureShortcut();
 
+        CreateSystemTray();
+
         _mainWindow = new MainWindow();
+        _mainWindow.ViewModel.TrayIcon = _notifyIcon;
         _mainWindow.Show();
 
         _mainWindow.ViewModel.PropertyChanged += OnViewModelPropertyChanged;
         _mainWindow.IsVisibleChanged += (s, e) => UpdateTrayShowHideText();
         Strings.LanguageChanged += () => UpdateTrayShowHideText();
 
-        CreateSystemTray();
         UpdateTrayShowHideText();
     }
 

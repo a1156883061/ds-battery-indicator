@@ -178,6 +178,59 @@ public class HidService : IDisposable
         ConnectionChanged?.Invoke(false);
     }
 
+    /// <summary>
+    /// 向 DualSense 发送震动脉冲（低电量触觉反馈）。
+    /// DualSense USB 输出报告：ReportID=0x02, 右马达=byte[3], 左马达=byte[4]
+    /// </summary>
+    public void SendHapticPulse()
+    {
+        if (_device == null || !_device.IsConnected) return;
+
+        try
+        {
+            // DualSense USB 输出报告（48 字节，含 Report ID 0x02）
+            byte[] outputReport = new byte[48];
+            outputReport[0] = 0x02;  // Report ID
+            outputReport[1] = 0x03;  // 启用震动 + 灯带
+            outputReport[3] = 128;   // 右握把马达 50% 强度（短暂脉冲）
+            outputReport[4] = 128;   // 左握把马达 50% 强度
+
+            // 灯带变红（11 段 RGB，每段 3 字节）
+            for (int i = 0; i < 11; i++)
+            {
+                outputReport[11 + i * 3 + 0] = 255; // R
+                outputReport[11 + i * 3 + 1] = 0;   // G
+                outputReport[11 + i * 3 + 2] = 0;   // B
+            }
+            outputReport[45] = 0x05; // Player LED: 仅中间亮（5 号位）
+
+            _device.Write(outputReport);
+
+            // 250ms 后停止震动，恢复灯带
+            Task.Delay(250).ContinueWith(_ =>
+            {
+                try
+                {
+                    byte[] stopReport = new byte[48];
+                    stopReport[0] = 0x02;
+                    stopReport[1] = 0x03;
+                    // 马达 = 0（停止震动）
+                    // 灯带恢复蓝色
+                    for (int i = 0; i < 11; i++)
+                    {
+                        stopReport[11 + i * 3 + 0] = 0;
+                        stopReport[11 + i * 3 + 1] = 0;
+                        stopReport[11 + i * 3 + 2] = 255;
+                    }
+                    stopReport[45] = 0x05;
+                    _device?.Write(stopReport);
+                }
+                catch { }
+            });
+        }
+        catch { }
+    }
+
     public void Dispose()
     {
         if (_disposed) return;

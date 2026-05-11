@@ -18,6 +18,9 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
     private RtssService? _rtssService;
     private bool _lowBatteryNotified;
 
+    /// <summary>由 App 注入，用于托盘气泡通知</summary>
+    public System.Windows.Forms.NotifyIcon? TrayIcon { get; set; }
+
     private DeviceStatus _status = DeviceStatus.Disconnected;
     private int _batteryLevel;
     private bool _isCharging;
@@ -128,7 +131,7 @@ public class MainViewModel : INotifyPropertyChanged, IDisposable
                     StartBlinking();
                     if (!_lowBatteryNotified)
                     {
-                        NotificationService.ShowLowBatteryNotification(device.BatteryLevel);
+                        NotificationService.NotifyLowBattery(device.BatteryLevel, TrayIcon, _hidService);
                         _lowBatteryNotified = true;
                     }
                     break;
