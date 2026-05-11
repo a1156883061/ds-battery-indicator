@@ -11,7 +11,10 @@
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
       "Read(//c/Program Files \\(x86\\)/RivaTuner Statistics Server/SDK/Include/**)",
-      "Read(//c/Program Files/RivaTuner Statistics Server/SDK/**)"
+      "Read(//c/Program Files/RivaTuner Statistics Server/SDK/**)",
+      "WebFetch(domain:ds.daidr.me)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)"
     ]
   }
 }
