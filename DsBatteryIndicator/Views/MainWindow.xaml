@@ -47,6 +47,8 @@
             <MenuItem x:Name="MenuRtss" IsCheckable="True"/>
             <MenuItem x:Name="MenuLanguage" />
             <Separator/>
+            <MenuItem x:Name="MenuTestNotify"/>
+            <Separator/>
             <MenuItem x:Name="MenuAbout"/>
             <MenuItem x:Name="MenuExit"/>
         </ContextMenu>

@@ -91,6 +91,14 @@ public partial class MainWindow : Window
             Strings.SetLanguage(next);
         };
 
+        MenuTestNotify.Click += (s, e) =>
+        {
+            bool ok = NotificationService.ShowTestNotification();
+            MessageBox.Show(ok ? "通知发送成功！" : "通知发送失败，请查看 notification.log",
+                Strings.AppName, MessageBoxButton.OK,
+                ok ? MessageBoxImage.Information : MessageBoxImage.Warning);
+        };
+
         MenuAbout.Click += (s, e) =>
         {
             MessageBox.Show(Strings.About_Text, Strings.AppName,
@@ -125,6 +133,7 @@ public partial class MainWindow : Window
         MenuAutoStart.Header = Strings.AutoStart;
         MenuRtss.Header = Strings.RtssOverlay;
         MenuLanguage.Header = Strings.Language;
+        MenuTestNotify.Header = Strings.TestNotify;
         MenuAbout.Header = Strings.About;
         MenuExit.Header = Strings.Exit;
     }

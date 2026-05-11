@@ -20,6 +20,7 @@ public static class Strings
             ["Exit"] = "退出",
             ["ShowHide"] = "隐藏",
             ["RtssOverlay"] = "RTSS 叠加",
+            ["TestNotify"] = "测试通知",
             ["Show"] = "显示",
             ["Hide"] = "隐藏",
             ["Disconnected"] = "未连接",
@@ -38,6 +39,7 @@ public static class Strings
             ["Exit"] = "Exit",
             ["ShowHide"] = "Hide",
             ["RtssOverlay"] = "RTSS Overlay",
+            ["TestNotify"] = "Test Notification",
             ["Show"] = "Show",
             ["Hide"] = "Hide",
             ["Disconnected"] = "Disconnected",
@@ -102,6 +104,7 @@ public static class Strings
     public static string Exit => Get("Exit");
     public static string ShowHide => Get("ShowHide");
     public static string RtssOverlay => Get("RtssOverlay");
+    public static string TestNotify => Get("TestNotify");
     public static string Show => Get("Show");
     public static string Hide => Get("Hide");
     public static string Disconnected => Get("Disconnected");
