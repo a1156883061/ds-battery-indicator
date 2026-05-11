@@ -27,10 +27,8 @@ public partial class HapticSettingsWindow : Window
         SliderIntensity.Value = cfg.HapticIntensity;
         TxtIntensity.Text = cfg.HapticIntensity.ToString();
 
-        SliderHapticTime.Value = cfg.HapticDurationMs;
         TxtHapticTime.Text = cfg.HapticDurationMs.ToString();
 
-        SliderLightTime.Value = cfg.LightbarDurationMs;
         TxtLightTime.Text = cfg.LightbarDurationMs.ToString();
 
         TxtR.Text = cfg.LightbarColorR.ToString();
@@ -46,8 +44,7 @@ public partial class HapticSettingsWindow : Window
 
         // 滑块 ↔ 输入框 双向同步
         BindSlider(SliderIntensity, TxtIntensity, 0, 255);
-        BindSlider(SliderHapticTime, TxtHapticTime, 100, 3000);
-        BindSlider(SliderLightTime, TxtLightTime, 500, 10000);
+
         BindSlider(SliderThreshold, TxtThreshold, 10, 90);
 
         // RGB 输入验证
@@ -161,6 +158,18 @@ public partial class HapticSettingsWindow : Window
     {
         if (sender is System.Windows.Controls.Button btn && int.TryParse(btn.Tag?.ToString(), out int val))
             TxtRepeatInterval.Text = val.ToString();
+    }
+
+    private void PresetHapticTime_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is System.Windows.Controls.Button btn && int.TryParse(btn.Tag?.ToString(), out int val))
+            TxtHapticTime.Text = val.ToString();
+    }
+
+    private void PresetLightTime_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is System.Windows.Controls.Button btn && int.TryParse(btn.Tag?.ToString(), out int val))
+            TxtLightTime.Text = val.ToString();
     }
 
     private void ApplyToConfig()
