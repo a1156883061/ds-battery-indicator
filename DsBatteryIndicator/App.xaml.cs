@@ -17,7 +17,6 @@ public partial class App : Application
         base.OnStartup(e);
 
         Strings.DetectLanguage();
-        NotificationService.EnsureShortcut();
 
         CreateSystemTray();
 
