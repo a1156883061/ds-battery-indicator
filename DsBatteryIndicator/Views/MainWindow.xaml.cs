@@ -99,17 +99,17 @@ public partial class MainWindow : Window
             win.ShowDialog();
         };
 
-        MenuTestNotify.Click += (s, e) =>
-        {
-            // 通过托盘气泡触发测试，验证三通道
-            _viewModel.TrayIcon?.ShowBalloonTip(3000, Strings.AppName,
-                Strings.TestNotifyText,
-                System.Windows.Forms.ToolTipIcon.None);
-            System.Media.SystemSounds.Exclamation.Play();
-            _viewModel.SendHapticTest();
-            MessageBox.Show(Strings.TestNotifyResult,
-                Strings.AppName, MessageBoxButton.OK, MessageBoxImage.Information);
-        };
+        // MenuTestNotify.Click += (s, e) =>
+        // {
+        //     // 通过托盘气泡触发测试，验证三通道
+        //     _viewModel.TrayIcon?.ShowBalloonTip(3000, Strings.AppName,
+        //         Strings.TestNotifyText,
+        //         System.Windows.Forms.ToolTipIcon.None);
+        //     System.Media.SystemSounds.Exclamation.Play();
+        //     _viewModel.SendHapticTest();
+        //     MessageBox.Show(Strings.TestNotifyResult,
+        //         Strings.AppName, MessageBoxButton.OK, MessageBoxImage.Information);
+        // };
 
         MenuAbout.Click += (s, e) =>
         {
@@ -148,7 +148,7 @@ public partial class MainWindow : Window
         MenuRtss.Header = Strings.RtssOverlay;
         MenuLanguage.Header = Strings.Language;
         MenuHapticSettings.Header = Strings.HapticSettings;
-        MenuTestNotify.Header = Strings.TestNotify;
+        // MenuTestNotify.Header = Strings.TestNotify;
         MenuAbout.Header = Strings.About;
         MenuExit.Header = Strings.Exit;
     }

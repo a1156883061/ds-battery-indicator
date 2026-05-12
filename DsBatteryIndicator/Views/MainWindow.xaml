@@ -48,7 +48,7 @@
             <MenuItem x:Name="MenuLanguage" />
             <Separator/>
             <MenuItem x:Name="MenuHapticSettings"/>
-            <MenuItem x:Name="MenuTestNotify"/>
+            <!-- <MenuItem x:Name="MenuTestNotify"/> -->
             <Separator/>
             <MenuItem x:Name="MenuAbout"/>
             <MenuItem x:Name="MenuExit"/>
