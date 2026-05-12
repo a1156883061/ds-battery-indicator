@@ -39,6 +39,7 @@ public static class Strings
             ["AlertThreshold"] = "电量阈值",
             ["RepeatEnabled"] = "重复提醒",
             ["RepeatInterval"] = "提醒间隔",
+            ["WindowOpacity"] = "窗口透明度",
             ["BtnTest"] = "测试",
             ["BtnSave"] = "保存",
             // 测试通知
@@ -73,6 +74,7 @@ public static class Strings
             ["AlertThreshold"] = "Threshold",
             ["RepeatEnabled"] = "Repeat",
             ["RepeatInterval"] = "Interval",
+            ["WindowOpacity"] = "Window Opacity",
             ["BtnTest"] = "Test",
             ["BtnSave"] = "Save",
             ["TestNotifyText"] = "Test: tray bubble + sound + controller haptic",
@@ -152,6 +154,7 @@ public static class Strings
     public static string AlertThreshold => Get("AlertThreshold");
     public static string RepeatEnabled => Get("RepeatEnabled");
     public static string RepeatInterval => Get("RepeatInterval");
+    public static string WindowOpacity => Get("WindowOpacity");
     public static string BtnTest => Get("BtnTest");
     public static string BtnSave => Get("BtnSave");
     public static string TestNotifyText => Get("TestNotifyText");

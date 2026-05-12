@@ -42,10 +42,15 @@ public partial class HapticSettingsWindow : Window
         ChkRepeatEnabled.IsChecked = cfg.LowBatteryRepeatEnabled;
         TxtRepeatInterval.Text = (cfg.LowBatteryRepeatIntervalMs / 1000).ToString();
 
+        int opacityPct = (int)(cfg.WindowOpacity * 100);
+        SliderOpacity.Value = opacityPct;
+        TxtOpacity.Text = opacityPct.ToString();
+
         // 滑块 ↔ 输入框 双向同步
         BindSlider(SliderIntensity, TxtIntensity, 0, 255);
 
         BindSlider(SliderThreshold, TxtThreshold, 10, 90);
+        BindSlider(SliderOpacity, TxtOpacity, 30, 100);
 
         // RGB 输入验证
         BindRgbInput(TxtR);
@@ -59,6 +64,7 @@ public partial class HapticSettingsWindow : Window
         BtnTest.Click += (s, e) =>
         {
             ApplyToConfig();
+            if (Owner is MainWindow mw) mw.Opacity = cfg.WindowOpacity;
             Application.Current.Dispatcher.Invoke(() =>
                 (Owner as MainWindow)?.ViewModel.SendHapticTest());
         };
@@ -68,6 +74,7 @@ public partial class HapticSettingsWindow : Window
         {
             ApplyToConfig();
             cfg.Save();
+            if (Owner is MainWindow mw) mw.Opacity = cfg.WindowOpacity;
             Close();
         };
     }
@@ -136,6 +143,7 @@ public partial class HapticSettingsWindow : Window
         LblAlertThreshold.Text = Strings.AlertThreshold;
         LblRepeatEnabled.Text = Strings.RepeatEnabled;
         LblRepeatInterval.Text = Strings.RepeatInterval;
+        LblOpacity.Text = Strings.WindowOpacity;
     }
 
     private void InitPresetButtons()
@@ -203,6 +211,7 @@ public partial class HapticSettingsWindow : Window
         cfg.LowBatteryThreshold = ClampInt(TxtThreshold.Text, 10, 90);
         cfg.LowBatteryRepeatEnabled = ChkRepeatEnabled.IsChecked == true;
         cfg.LowBatteryRepeatIntervalMs = Math.Max(1, ClampInt(TxtRepeatInterval.Text, 1, int.MaxValue)) * 1000;
+        cfg.WindowOpacity = Math.Clamp(ClampInt(TxtOpacity.Text, 30, 100), 30, 100) / 100.0;
     }
 
     private static int ClampInt(string text, int min, int max)

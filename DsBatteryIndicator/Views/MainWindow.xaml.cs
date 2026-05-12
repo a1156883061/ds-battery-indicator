@@ -23,6 +23,8 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
+        Opacity = AppSettings.Instance.WindowOpacity;
+
         _viewModel = new MainViewModel();
         DataContext = _viewModel;
 

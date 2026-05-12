@@ -1,9 +1,11 @@
 @echo off
-echo === 发布 DS Battery Indicator ===
-cd /d %~dp0DsBatteryIndicator
-rmdir /s /q ..\publish 2>nul
+chcp 65001 >nul
+echo === Publishing DS Battery Indicator ===
+cd /d "%~dp0DsBatteryIndicator"
+if exist "..\publish" rmdir /s /q "..\publish"
 dotnet publish -c Release -o ..\publish
 echo.
-echo 发布完成！产物在 publish\ 目录
-echo 用户需安装 .NET 8 Desktop Runtime 才能运行
+echo Published to publish\ directory
+echo Users need .NET 8 Desktop Runtime to run
+echo.
 pause

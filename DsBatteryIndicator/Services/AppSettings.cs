@@ -51,6 +51,7 @@ public class AppSettings
     public int LowBatteryThreshold { get; set; } = 10;
     public bool LowBatteryRepeatEnabled { get; set; } = true;
     public int LowBatteryRepeatIntervalMs { get; set; } = 600000;
+    public double WindowOpacity { get; set; } = 1.0;
 
     public void Save()
     {
