@@ -37,7 +37,7 @@
         </Style>
 
         <Style x:Key="NumInput" TargetType="TextBox">
-            <Setter Property="Width" Value="48"/>
+            <Setter Property="Width" Value="42"/>
             <Setter Property="Height" Value="24"/>
             <Setter Property="Background" Value="#252530"/>
             <Setter Property="Foreground" Value="#D0D0D8"/>
@@ -146,7 +146,7 @@
                         Margin="0,0,8,0" Cursor="Hand" Click="PresetHapticTime_Click"/>
             </StackPanel>
             <StackPanel Grid.Row="2" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBox x:Name="TxtHapticTime" Style="{StaticResource NumInput}" Width="42"/>
+                <TextBox x:Name="TxtHapticTime" Style="{StaticResource NumInput}"/>
                 <TextBlock Text="ms" FontSize="10" Foreground="#808088" VerticalAlignment="Center" Margin="3,0,0,0"/>
             </StackPanel>
 
@@ -165,7 +165,7 @@
             </StackPanel>
 
             <StackPanel Grid.Row="4" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBox x:Name="TxtLightTime" Style="{StaticResource NumInput}" Width="42"/>
+                <TextBox x:Name="TxtLightTime" Style="{StaticResource NumInput}"/>
                 <TextBlock Text="ms" FontSize="10" Foreground="#808088" VerticalAlignment="Center" Margin="3,0,0,0"/>
             </StackPanel>
 
@@ -177,11 +177,11 @@
                        VerticalAlignment="Center" FontSize="12"/>
             <StackPanel Grid.Row="8" Grid.Column="2" Orientation="Horizontal">
                 <TextBlock Text="R" Foreground="#FF6666" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
-                <TextBox x:Name="TxtR" Style="{StaticResource NumInput}" Width="42"/>
+                <TextBox x:Name="TxtR" Style="{StaticResource NumInput}"/>
                 <TextBlock Text="G" Foreground="#66FF66" FontSize="10" VerticalAlignment="Center" Margin="10,0,2,0"/>
-                <TextBox x:Name="TxtG" Style="{StaticResource NumInput}" Width="42"/>
+                <TextBox x:Name="TxtG" Style="{StaticResource NumInput}"/>
                 <TextBlock Text="B" Foreground="#6666FF" FontSize="10" VerticalAlignment="Center" Margin="10,0,2,0"/>
-                <TextBox x:Name="TxtB" Style="{StaticResource NumInput}" Width="42"/>
+                <TextBox x:Name="TxtB" Style="{StaticResource NumInput}"/>
                 <Border Width="30" Height="30" CornerRadius="6" BorderBrush="#3A3A45" BorderThickness="1"
                         VerticalAlignment="Center" Margin="16,0,0,0">
                     <Border.Background>
@@ -253,8 +253,8 @@
             <Slider x:Name="SliderOpacity" Grid.Row="24" Grid.Column="2"
                     Style="{StaticResource SlimSlider}" Minimum="30" Maximum="100" Value="100"/>
             <StackPanel Grid.Row="24" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBox x:Name="TxtOpacity" Style="{StaticResource NumInput}" Width="40"/>
-                <TextBlock Text="%" FontSize="10" Foreground="#808088" VerticalAlignment="Center" Margin="2,0,0,0"/>
+                <TextBox x:Name="TxtOpacity" Style="{StaticResource NumInput}"/>
+                <TextBlock Text="%" FontSize="10" Foreground="#808088" VerticalAlignment="Center" Margin="3,0,0,0"/>
             </StackPanel>
         </Grid>
 
