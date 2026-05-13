@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="HidLibrary" Version="3.3.40" />
+    <PackageReference Include="NAudio" Version="2.2.1" />
   </ItemGroup>
 
 </Project>

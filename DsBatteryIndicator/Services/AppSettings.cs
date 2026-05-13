@@ -53,6 +53,12 @@ public class AppSettings
     public int LowBatteryRepeatIntervalMs { get; set; } = 600000;
     public double WindowOpacity { get; set; } = 1.0;
 
+    // 手柄扬声器配置
+    public bool ControllerSpeakerEnabled { get; set; } = true;
+    public int ControllerSpeakerVolume { get; set; } = 80;
+    public int ControllerSpeakerDurationMs { get; set; } = 800;
+    public string ControllerAudioPath { get; set; } = "";
+
     public void Save()
     {
         string dir = Path.GetDirectoryName(FilePath)!;

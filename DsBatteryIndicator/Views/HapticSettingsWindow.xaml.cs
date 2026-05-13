@@ -46,10 +46,21 @@ public partial class HapticSettingsWindow : Window
         SliderOpacity.Value = opacityPct;
         TxtOpacity.Text = opacityPct.ToString();
 
+        // 手柄扬声器
+        ChkControllerSpeaker.IsChecked = cfg.ControllerSpeakerEnabled;
+        _selectedAudioPath = string.IsNullOrWhiteSpace(cfg.ControllerAudioPath)
+            ? null : cfg.ControllerAudioPath;
+        SliderSpeakerVolume.Value = cfg.ControllerSpeakerVolume;
+        TxtSpeakerVolume.Text = cfg.ControllerSpeakerVolume.ToString();
+        TxtSpeakerDuration.Text = cfg.ControllerSpeakerDurationMs.ToString();
+        UpdateControllerSpeakerLabel();
+        UpdateAudioPathDisplay();
+
         // 滑块 ↔ 输入框 双向同步
         BindSlider(SliderIntensity, TxtIntensity, 0, 255);
 
         BindSlider(SliderThreshold, TxtThreshold, 10, 90);
+        BindSlider(SliderSpeakerVolume, TxtSpeakerVolume, 10, 100);
         BindSlider(SliderOpacity, TxtOpacity, 30, 100);
 
         // RGB 输入验证
@@ -67,6 +78,26 @@ public partial class HapticSettingsWindow : Window
             if (Owner is MainWindow mw) mw.Opacity = cfg.WindowOpacity;
             Application.Current.Dispatcher.Invoke(() =>
                 (Owner as MainWindow)?.ViewModel.SendHapticTest());
+
+            // 同时测试手柄扬声器
+            if (cfg.ControllerSpeakerEnabled)
+            {
+                bool ok;
+                if (!string.IsNullOrWhiteSpace(cfg.ControllerAudioPath))
+                    ok = AudioService.PlayCustomAudio(cfg.ControllerAudioPath);
+                else
+                    ok = AudioService.PlayBuiltinBeep();
+
+                if (!ok)
+                {
+                    string diag = AudioService.GetDiagnosticInfo();
+                    System.Windows.MessageBox.Show(
+                        "未找到手柄音频设备。\n请确认手柄通过 USB 连接。\n（蓝牙模式下扬声器不可用）\n\n诊断信息：\n" + diag,
+                        Strings.AppName,
+                        System.Windows.MessageBoxButton.OK,
+                        System.Windows.MessageBoxImage.Information);
+                }
+            }
         };
 
         // 保存按钮
@@ -144,6 +175,11 @@ public partial class HapticSettingsWindow : Window
         LblRepeatEnabled.Text = Strings.RepeatEnabled;
         LblRepeatInterval.Text = Strings.RepeatInterval;
         LblOpacity.Text = Strings.WindowOpacity;
+        LblControllerSpeaker.Text = Strings.ControllerSpeaker;
+        LblSpeakerVolume.Text = Strings.SpeakerVolume;
+        LblSpeakerDuration.Text = Strings.SpeakerDuration;
+        LblCustomAudio.Text = Strings.CustomAudioFile;
+        BtnSelectAudio.Content = Strings.SelectAudioFile;
     }
 
     private void InitPresetButtons()
@@ -163,6 +199,12 @@ public partial class HapticSettingsWindow : Window
         StyleBtnByName("BtnLight3000");
         StyleBtnByName("BtnLight5000");
         StyleBtnByName("BtnLight10000");
+        // 蜂鸣时长
+        StyleBtnByName("BtnSpk200");
+        StyleBtnByName("BtnSpk500");
+        StyleBtnByName("BtnSpk800");
+        StyleBtnByName("BtnSpk1000");
+        StyleBtnByName("BtnSelectAudio");
     }
 
     private void StyleBtnByName(string name)
@@ -197,6 +239,62 @@ public partial class HapticSettingsWindow : Window
             TxtLightTime.Text = val.ToString();
     }
 
+    private void PresetSpeakerTime_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is System.Windows.Controls.Button btn && int.TryParse(btn.Tag?.ToString(), out int val))
+            TxtSpeakerDuration.Text = val.ToString();
+    }
+
+    private void ChkControllerSpeaker_Changed(object sender, RoutedEventArgs e)
+    {
+        UpdateControllerSpeakerLabel();
+    }
+
+    private void BtnSelectAudio_Click(object sender, RoutedEventArgs e)
+    {
+        var dlg = new Microsoft.Win32.OpenFileDialog
+        {
+            Filter = Strings.AudioFileFilter,
+            Title = Strings.SelectAudioFile
+        };
+        if (dlg.ShowDialog() == true)
+        {
+            _selectedAudioPath = dlg.FileName;
+            UpdateAudioPathDisplay();
+        }
+    }
+
+    private void BtnClearAudio_Click(object sender, RoutedEventArgs e)
+    {
+        _selectedAudioPath = null;
+        UpdateAudioPathDisplay();
+    }
+
+    private void UpdateControllerSpeakerLabel()
+    {
+        ChkControllerSpeaker.Content = ChkControllerSpeaker.IsChecked == true
+            ? Strings.ControllerSpeakerEnabled
+            : Strings.ControllerSpeakerDisabled;
+    }
+
+    private void UpdateAudioPathDisplay()
+    {
+        bool hasCustom = !string.IsNullOrWhiteSpace(_selectedAudioPath);
+        if (hasCustom)
+        {
+            TxtAudioPath.Text = System.IO.Path.GetFileName(_selectedAudioPath!);
+            TxtAudioPath.Foreground = new SolidColorBrush(Color.FromRgb(0xD0, 0xD0, 0xD8));
+        }
+        else
+        {
+            TxtAudioPath.Text = Strings.NoFileSelected;
+            TxtAudioPath.Foreground = new SolidColorBrush(Color.FromRgb(0x80, 0x80, 0x88));
+        }
+        BtnClearAudio.Visibility = hasCustom ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private string? _selectedAudioPath;
+
     private void ApplyToConfig()
     {
         var cfg = AppSettings.Instance;
@@ -212,6 +310,11 @@ public partial class HapticSettingsWindow : Window
         cfg.LowBatteryRepeatEnabled = ChkRepeatEnabled.IsChecked == true;
         cfg.LowBatteryRepeatIntervalMs = Math.Max(1, ClampInt(TxtRepeatInterval.Text, 1, int.MaxValue)) * 1000;
         cfg.WindowOpacity = Math.Clamp(ClampInt(TxtOpacity.Text, 30, 100), 30, 100) / 100.0;
+
+        cfg.ControllerSpeakerEnabled = ChkControllerSpeaker.IsChecked == true;
+        cfg.ControllerSpeakerVolume = ClampInt(TxtSpeakerVolume.Text, 10, 100);
+        cfg.ControllerSpeakerDurationMs = ClampInt(TxtSpeakerDuration.Text, 100, 3000);
+        cfg.ControllerAudioPath = _selectedAudioPath ?? "";
     }
 
     private static int ClampInt(string text, int min, int max)

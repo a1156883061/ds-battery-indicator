@@ -123,6 +123,13 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="4"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <!-- 0: 震动强度 -->
@@ -255,6 +262,60 @@
             <StackPanel Grid.Row="24" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
                 <TextBox x:Name="TxtOpacity" Style="{StaticResource NumInput}"/>
                 <TextBlock Text="%" FontSize="10" Foreground="#808088" VerticalAlignment="Center" Margin="3,0,0,0"/>
+            </StackPanel>
+
+            <!-- 26: 分隔线 -->
+            <Border Grid.Row="26" Grid.ColumnSpan="5" Height="1" Background="#2A2A35"/>
+
+            <!-- 28: 手柄扬声器开关 -->
+            <TextBlock x:Name="LblControllerSpeaker" Grid.Row="28" Grid.Column="0"
+                       VerticalAlignment="Center" FontSize="12"/>
+            <CheckBox x:Name="ChkControllerSpeaker" Grid.Row="28" Grid.Column="4"
+                      VerticalAlignment="Center" Checked="ChkControllerSpeaker_Changed"
+                      Unchecked="ChkControllerSpeaker_Changed"/>
+
+            <!-- 29: 扬声器音量 -->
+            <TextBlock x:Name="LblSpeakerVolume" Grid.Row="29" Grid.Column="0"
+                       VerticalAlignment="Center" FontSize="12"/>
+            <Slider x:Name="SliderSpeakerVolume" Grid.Row="29" Grid.Column="2"
+                    Style="{StaticResource SlimSlider}" Minimum="10" Maximum="100" Value="80"/>
+            <StackPanel Grid.Row="29" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBox x:Name="TxtSpeakerVolume" Style="{StaticResource NumInput}"/>
+                <TextBlock Text="%" FontSize="10" Foreground="#808088" VerticalAlignment="Center" Margin="3,0,0,0"/>
+            </StackPanel>
+
+            <!-- 30: 蜂鸣时长 -->
+            <TextBlock x:Name="LblSpeakerDuration" Grid.Row="30" Grid.Column="0"
+                       VerticalAlignment="Center" FontSize="12"/>
+            <StackPanel Grid.Row="30" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                <Button x:Name="BtnSpk200" Content="200ms" Tag="200" Width="46" Height="22" FontSize="11"
+                        Margin="0,0,4,0" Cursor="Hand" Click="PresetSpeakerTime_Click"/>
+                <Button x:Name="BtnSpk500" Content="500ms" Tag="500" Width="46" Height="22" FontSize="11"
+                        Margin="0,0,4,0" Cursor="Hand" Click="PresetSpeakerTime_Click"/>
+                <Button x:Name="BtnSpk800" Content="800ms" Tag="800" Width="46" Height="22" FontSize="11"
+                        Margin="0,0,4,0" Cursor="Hand" Click="PresetSpeakerTime_Click"/>
+                <Button x:Name="BtnSpk1000" Content="1s" Tag="1000" Width="46" Height="22" FontSize="11"
+                        Margin="0,0,8,0" Cursor="Hand" Click="PresetSpeakerTime_Click"/>
+            </StackPanel>
+            <StackPanel Grid.Row="30" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBox x:Name="TxtSpeakerDuration" Style="{StaticResource NumInput}"/>
+                <TextBlock Text="ms" FontSize="10" Foreground="#808088" VerticalAlignment="Center" Margin="3,0,0,0"/>
+            </StackPanel>
+
+            <!-- 31: 自定义音频文件 -->
+            <TextBlock x:Name="LblCustomAudio" Grid.Row="31" Grid.Column="0"
+                       VerticalAlignment="Center" FontSize="12"/>
+            <StackPanel Grid.Row="31" Grid.Column="2" Grid.ColumnSpan="2" Orientation="Horizontal"
+                        VerticalAlignment="Center">
+                <TextBlock x:Name="TxtAudioPath" FontSize="11" Foreground="#808088"
+                           VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
+                           MaxWidth="180"/>
+                <Button x:Name="BtnClearAudio" Content="✕" Width="20" Height="20" FontSize="10"
+                        Margin="4,0,0,0" Cursor="Hand" Click="BtnClearAudio_Click"
+                        Visibility="Collapsed"
+                        Background="Transparent" Foreground="#808088" BorderThickness="0"/>
+                <Button x:Name="BtnSelectAudio" Width="68" Height="24" FontSize="11"
+                        Margin="8,0,0,0" Cursor="Hand" Click="BtnSelectAudio_Click"/>
             </StackPanel>
         </Grid>
 

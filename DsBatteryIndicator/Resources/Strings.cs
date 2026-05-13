@@ -45,6 +45,15 @@ public static class Strings
             // 测试通知
             ["TestNotifyText"] = "测试通知：托盘气泡+提示音+手柄震动",
             ["TestNotifyResult"] = "三通道测试触发完成：\n• 托盘气泡\n• 提示音\n• 手柄震动+灯带",
+            ["ControllerSpeaker"] = "手柄扬声器",
+            ["ControllerSpeakerEnabled"] = "已启用",
+            ["ControllerSpeakerDisabled"] = "已禁用",
+            ["CustomAudioFile"] = "自定义音频",
+            ["SelectAudioFile"] = "选择文件",
+            ["NoFileSelected"] = "未选择（使用内置蜂鸣）",
+            ["SpeakerDuration"] = "蜂鸣时长",
+            ["SpeakerVolume"] = "扬声器音量",
+            ["AudioFileFilter"] = "音频文件|*.wav;*.mp3|所有文件|*.*",
         },
         ["en"] = new()
         {
@@ -79,6 +88,15 @@ public static class Strings
             ["BtnSave"] = "Save",
             ["TestNotifyText"] = "Test: tray bubble + sound + controller haptic",
             ["TestNotifyResult"] = "Test triggered:\n* Tray bubble\n* Alert sound\n* Controller haptic + lightbar",
+            ["ControllerSpeaker"] = "Controller Speaker",
+            ["ControllerSpeakerEnabled"] = "Enabled",
+            ["ControllerSpeakerDisabled"] = "Disabled",
+            ["CustomAudioFile"] = "Custom Audio",
+            ["SelectAudioFile"] = "Select File",
+            ["NoFileSelected"] = "None (built-in beep)",
+            ["SpeakerDuration"] = "Beep Duration",
+            ["SpeakerVolume"] = "Speaker Volume",
+            ["AudioFileFilter"] = "Audio Files|*.wav;*.mp3|All Files|*.*",
         },
     };
 
@@ -159,6 +177,15 @@ public static class Strings
     public static string BtnSave => Get("BtnSave");
     public static string TestNotifyText => Get("TestNotifyText");
     public static string TestNotifyResult => Get("TestNotifyResult");
+    public static string ControllerSpeaker => Get("ControllerSpeaker");
+    public static string ControllerSpeakerEnabled => Get("ControllerSpeakerEnabled");
+    public static string ControllerSpeakerDisabled => Get("ControllerSpeakerDisabled");
+    public static string CustomAudioFile => Get("CustomAudioFile");
+    public static string SelectAudioFile => Get("SelectAudioFile");
+    public static string NoFileSelected => Get("NoFileSelected");
+    public static string SpeakerDuration => Get("SpeakerDuration");
+    public static string SpeakerVolume => Get("SpeakerVolume");
+    public static string AudioFileFilter => Get("AudioFileFilter");
 
     private static string Get(string key)
     {

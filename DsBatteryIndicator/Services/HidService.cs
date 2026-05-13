@@ -113,6 +113,8 @@ public class HidService : IDisposable
         {
             var report = BuildOutputReport((byte)intensity, (byte)intensity, r, g, b);
             _device.Write(report);
+            DebugLog.Write(
+                $"[HidService] Output Report 已发送: motor={intensity}, spkVol={report[6]}, audioCtrl=0x{report[8]:X2}, validFlag0=0x{report[1]:X2}");
 
             Task.Delay(hapticMs).ContinueWith(_ =>
             {
@@ -131,18 +133,24 @@ public class HidService : IDisposable
 
     private static byte[] BuildOutputReport(byte rightMotor, byte leftMotor, byte r, byte g, byte b)
     {
+        var cfg = AppSettings.Instance;
+        byte spkVol = (byte)(cfg.ControllerSpeakerVolume * 255 / 100);
         var report = new byte[48];
-        report[0] = 0x02;
-        report[1] = (byte)((rightMotor > 0 || leftMotor > 0) ? 0x03 : 0x00);
-        report[2] = 0xF7;
-        report[3] = rightMotor;
-        report[4] = leftMotor;
-        report[42] = 0x02;
+        report[0] = 0x02;                                     // Report ID
+        // validFlag0: bit0=motorR, bit1=motorL, bit5=speakerVol, bit7=audioCtrl
+        report[1] = (byte)((rightMotor > 0 || leftMotor > 0) ? 0xA3 : 0xA0);
+        report[2] = 0xF7;                                     // 功能掩码
+        report[3] = rightMotor;                               // 右马达
+        report[4] = leftMotor;                                // 左马达
+        report[5] = 0;                                        // headphoneVolume = 0
+        report[6] = spkVol;                                   // speakerVolume
+        report[8] = 0x30;                                     // audioControl = 扬声器路由
+        report[42] = 0x02;                                    // 灯带控制
         report[43] = 0x03;
         report[44] = 0x04;
-        report[45] = r;
-        report[46] = g;
-        report[47] = b;
+        report[45] = r;                                       // 灯带 R
+        report[46] = g;                                       // 灯带 G
+        report[47] = b;                                       // 灯带 B
         return report;
     }
 

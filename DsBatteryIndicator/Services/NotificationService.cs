@@ -3,10 +3,11 @@ using DsBatteryIndicator.Resources;
 namespace DsBatteryIndicator.Services;
 
 /// <summary>
-/// 低电量通知服务。三通道并行，不打断游戏操作：
+/// 低电量通知服务。四通道并行，不打断游戏操作：
 /// 1. 系统托盘气泡（BalloonTip）
 /// 2. 声音提示（系统 Exclamation 音效）
 /// 3. 手柄震动+灯带（通过 HidService）
+/// 4. 手柄扬声器警告音（通过 AudioService，USB 模式）
 /// </summary>
 public static class NotificationService
 {
@@ -16,6 +17,7 @@ public static class NotificationService
         ShowBalloonTip(trayIcon, batteryLevel);
         PlayAlertSound();
         TriggerControllerHaptic(hidService);
+        TriggerControllerSpeaker();
     }
 
     private static void ShowBalloonTip(System.Windows.Forms.NotifyIcon? trayIcon, int batteryLevel)
@@ -39,5 +41,16 @@ public static class NotificationService
     private static void TriggerControllerHaptic(HidService? hidService)
     {
         hidService?.SendHapticPulse();
+    }
+
+    private static void TriggerControllerSpeaker()
+    {
+        var cfg = AppSettings.Instance;
+        if (!cfg.ControllerSpeakerEnabled) return;
+
+        if (!string.IsNullOrWhiteSpace(cfg.ControllerAudioPath))
+            AudioService.PlayCustomAudio(cfg.ControllerAudioPath);
+        else
+            AudioService.PlayBuiltinBeep();
     }
 }
