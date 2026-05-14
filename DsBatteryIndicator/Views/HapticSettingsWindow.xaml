@@ -284,8 +284,7 @@
             <TextBlock x:Name="LblControllerSpeaker" Grid.Row="30" Grid.Column="0"
                        VerticalAlignment="Center" FontSize="12"/>
             <CheckBox x:Name="ChkControllerSpeaker" Grid.Row="30" Grid.Column="4"
-                      VerticalAlignment="Center" Checked="ChkControllerSpeaker_Changed"
-                      Unchecked="ChkControllerSpeaker_Changed"/>
+                      VerticalAlignment="Center"/>
 
             <!-- 32: 扬声器音量 -->
             <TextBlock x:Name="LblSpeakerVolume" Grid.Row="32" Grid.Column="0"

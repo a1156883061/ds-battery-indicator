@@ -55,7 +55,6 @@ public partial class HapticSettingsWindow : Window
         SliderSpeakerVolume.Value = cfg.ControllerSpeakerVolume;
         TxtSpeakerVolume.Text = cfg.ControllerSpeakerVolume.ToString();
         TxtSpeakerDuration.Text = cfg.ControllerSpeakerDurationMs.ToString();
-        UpdateControllerSpeakerLabel();
         UpdateAudioPathDisplay();
 
         // 滑块 ↔ 输入框 双向同步
@@ -260,11 +259,6 @@ public partial class HapticSettingsWindow : Window
             TxtPollingInterval.Text = val.ToString();
     }
 
-    private void ChkControllerSpeaker_Changed(object sender, RoutedEventArgs e)
-    {
-        UpdateControllerSpeakerLabel();
-    }
-
     private void BtnSelectAudio_Click(object sender, RoutedEventArgs e)
     {
         var dlg = new Microsoft.Win32.OpenFileDialog
@@ -283,13 +277,6 @@ public partial class HapticSettingsWindow : Window
     {
         _selectedAudioPath = null;
         UpdateAudioPathDisplay();
-    }
-
-    private void UpdateControllerSpeakerLabel()
-    {
-        ChkControllerSpeaker.Content = ChkControllerSpeaker.IsChecked == true
-            ? Strings.ControllerSpeakerEnabled
-            : Strings.ControllerSpeakerDisabled;
     }
 
     private void UpdateAudioPathDisplay()
