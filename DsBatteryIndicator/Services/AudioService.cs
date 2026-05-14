@@ -15,25 +15,16 @@ public static class AudioService
         try
         {
             if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
-            {
-                DebugLog.Write("[AudioService] 自定义音频文件不存在: " + filePath);
                 return false;
-            }
 
-            // 同步快速检查设备是否存在
             if (!HasControllerAudioDevice())
-            {
-                DebugLog.Write("[AudioService] PlayCustomAudio 失败: 未找到手柄音频设备");
                 return false;
-            }
 
-            DebugLog.Write($"[AudioService] 开始播放自定义音频: {filePath}");
             Task.Run(() => PlayCustomAudioOnMtaThread(filePath));
             return true;
         }
-        catch (Exception ex)
+        catch
         {
-            DebugLog.Write($"[AudioService] PlayCustomAudio 异常: {ex.Message}");
             return false;
         }
     }
@@ -43,22 +34,17 @@ public static class AudioService
         try
         {
             if (!HasControllerAudioDevice())
-            {
-                DebugLog.Write("[AudioService] PlayBuiltinBeep 失败: 未找到手柄音频设备");
                 return false;
-            }
 
             var cfg = AppSettings.Instance;
             double volume = cfg.ControllerSpeakerVolume / 100.0;
             int durationMs = Math.Clamp(cfg.ControllerSpeakerDurationMs, 100, 3000);
 
-            DebugLog.Write($"[AudioService] 开始播放内置蜂鸣: 音量={cfg.ControllerSpeakerVolume}%, 时长={durationMs}ms");
             Task.Run(() => PlayBuiltinBeepOnMtaThread(volume, durationMs));
             return true;
         }
-        catch (Exception ex)
+        catch
         {
-            DebugLog.Write($"[AudioService] PlayBuiltinBeep 异常: {ex.Message}");
             return false;
         }
     }
@@ -93,8 +79,6 @@ public static class AudioService
         }
     }
 
-    // ---- 以下方法在 MTA 线程（Task.Run）中执行，避免 COM 跨线程封送 ----
-
     private static void PlayBuiltinBeepOnMtaThread(double volume, int durationMs)
     {
         try
@@ -102,7 +86,6 @@ public static class AudioService
             var device = FindControllerDeviceOnMtaThread();
             if (device == null) return;
 
-            DebugLog.Write($"[AudioService] MTA 线程播放蜂鸣: 设备={device.FriendlyName}");
             var format = new WaveFormat(44100, 16, 1);
             byte[] pcm = GenerateBeepPcm(format, volume, durationMs);
             using var stream = new MemoryStream(pcm);
@@ -110,16 +93,11 @@ public static class AudioService
             using var output = new WasapiOut(device, AudioClientShareMode.Shared, false, 100);
             output.Init(source);
             output.Play();
-            DebugLog.Write($"[AudioService] 蜂鸣开始 ({durationMs}ms, {pcm.Length}bytes PCM)");
             while (output.PlaybackState == PlaybackState.Playing)
                 System.Threading.Thread.Sleep(50);
-            DebugLog.Write("[AudioService] 蜂鸣播放结束");
             device.Dispose();
         }
-        catch (Exception ex)
-        {
-            DebugLog.Write($"[AudioService] 蜂鸣播放异常: {ex.Message}");
-        }
+        catch { }
     }
 
     private static void PlayCustomAudioOnMtaThread(string filePath)
@@ -129,33 +107,24 @@ public static class AudioService
             var device = FindControllerDeviceOnMtaThread();
             if (device == null) return;
 
-            DebugLog.Write($"[AudioService] MTA 线程播放自定义音频: 设备={device.FriendlyName}");
             using var reader = new AudioFileReader(filePath);
             using var output = new WasapiOut(device, AudioClientShareMode.Shared, false, 100);
             output.Init(reader);
             output.Play();
-            DebugLog.Write("[AudioService] 自定义音频开始播放");
             while (output.PlaybackState == PlaybackState.Playing)
                 System.Threading.Thread.Sleep(50);
-            DebugLog.Write("[AudioService] 自定义音频播放结束");
             device.Dispose();
         }
-        catch (Exception ex)
-        {
-            DebugLog.Write($"[AudioService] 自定义音频播放异常: {ex.Message}");
-        }
+        catch { }
     }
 
     private static MMDevice? FindControllerDeviceOnMtaThread()
     {
         var enumerator = new MMDeviceEnumerator();
-        var device = enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active)
+        return enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active)
             .FirstOrDefault(d =>
                 d.FriendlyName.Contains("Wireless Controller") ||
                 d.FriendlyName.Contains("DualSense"));
-        if (device != null)
-            DebugLog.Write($"[AudioService] MTA 枚举匹配: {device.FriendlyName}");
-        return device;
     }
 
     private static bool HasControllerAudioDevice()

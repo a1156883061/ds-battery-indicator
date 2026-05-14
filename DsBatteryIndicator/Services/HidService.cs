@@ -113,8 +113,6 @@ public class HidService : IDisposable
         {
             var report = BuildOutputReport((byte)intensity, (byte)intensity, r, g, b);
             _device.Write(report);
-            DebugLog.Write(
-                $"[HidService] Output Report 已发送: motor={intensity}, spkVol={report[6]}, audioCtrl=0x{report[8]:X2}, validFlag0=0x{report[1]:X2}");
 
             Task.Delay(hapticMs).ContinueWith(_ =>
             {
