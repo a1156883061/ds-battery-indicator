@@ -1,0 +1,49 @@
+name: 打包发布
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: 方案 A — Framework-Dependent 发布
+        run: dotnet publish DsBatteryIndicator/DsBatteryIndicator.csproj -c Release -o publish/framework-dependent
+
+      - name: 方案 B — Self-Contained 发布
+        run: dotnet publish DsBatteryIndicator/DsBatteryIndicator.csproj -c Release -r win-x64 --self-contained -o publish/self-contained
+
+      - name: 打包 Framework-Dependent
+        run: Compress-Archive -Path publish/framework-dependent/* -DestinationPath DS-Battery-Indicator-framework-dependent.zip
+
+      - name: 打包 Self-Contained
+        run: Compress-Archive -Path publish/self-contained/* -DestinationPath DS-Battery-Indicator-self-contained.zip
+
+      - name: 上传 Artifact（手动触发用）
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-packages
+          path: |
+            DS-Battery-Indicator-framework-dependent.zip
+            DS-Battery-Indicator-self-contained.zip
+
+      - name: 创建 Release 并上传（tag 触发时）
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            DS-Battery-Indicator-framework-dependent.zip
+            DS-Battery-Indicator-self-contained.zip
+          generate_release_notes: true
