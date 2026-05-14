@@ -69,7 +69,7 @@ public class HidService : IDisposable
     {
         while (!ct.IsCancellationRequested)
         {
-            try { await Task.Delay(50, ct); }
+            try { await Task.Delay(Math.Max(AppSettings.Instance.PollingIntervalMs, 50), ct); }
             catch (OperationCanceledException) { return; }
 
             if (_device == null) { await TryConnectAsync(); continue; }

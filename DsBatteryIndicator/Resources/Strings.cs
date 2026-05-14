@@ -51,6 +51,7 @@ public static class Strings
             ["CustomAudioFile"] = "自定义音频",
             ["SelectAudioFile"] = "选择文件",
             ["NoFileSelected"] = "未选择（使用内置蜂鸣）",
+            ["PollingInterval"] = "轮询时间",
             ["SpeakerDuration"] = "蜂鸣时长",
             ["SpeakerVolume"] = "扬声器音量",
             ["AudioFileFilter"] = "音频文件|*.wav;*.mp3|所有文件|*.*",
@@ -94,6 +95,7 @@ public static class Strings
             ["CustomAudioFile"] = "Custom Audio",
             ["SelectAudioFile"] = "Select File",
             ["NoFileSelected"] = "None (built-in beep)",
+            ["PollingInterval"] = "Polling Interval",
             ["SpeakerDuration"] = "Beep Duration",
             ["SpeakerVolume"] = "Speaker Volume",
             ["AudioFileFilter"] = "Audio Files|*.wav;*.mp3|All Files|*.*",
@@ -183,6 +185,7 @@ public static class Strings
     public static string CustomAudioFile => Get("CustomAudioFile");
     public static string SelectAudioFile => Get("SelectAudioFile");
     public static string NoFileSelected => Get("NoFileSelected");
+    public static string PollingInterval => Get("PollingInterval");
     public static string SpeakerDuration => Get("SpeakerDuration");
     public static string SpeakerVolume => Get("SpeakerVolume");
     public static string AudioFileFilter => Get("AudioFileFilter");

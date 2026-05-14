@@ -130,6 +130,8 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <!-- 0: 震动强度 -->
@@ -316,6 +318,24 @@
                         Background="Transparent" Foreground="#808088" BorderThickness="0"/>
                 <Button x:Name="BtnSelectAudio" Width="68" Height="24" FontSize="11"
                         Margin="8,0,0,0" Cursor="Hand" Click="BtnSelectAudio_Click"/>
+            </StackPanel>
+
+            <!-- 33: 轮询时间 -->
+            <TextBlock x:Name="LblPollingInterval" Grid.Row="33" Grid.Column="0"
+                       VerticalAlignment="Center" FontSize="12"/>
+            <StackPanel Grid.Row="33" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                <Button x:Name="BtnPoll50" Content="50ms" Tag="50" Width="46" Height="22"
+                        FontSize="11" Margin="0,0,4,0" Cursor="Hand" Click="PresetPolling_Click"/>
+                <Button x:Name="BtnPoll250" Content="250ms" Tag="250" Width="46" Height="22"
+                        FontSize="11" Margin="0,0,4,0" Cursor="Hand" Click="PresetPolling_Click"/>
+                <Button x:Name="BtnPoll1000" Content="1s" Tag="1000" Width="46" Height="22"
+                        FontSize="11" Margin="0,0,4,0" Cursor="Hand" Click="PresetPolling_Click"/>
+                <Button x:Name="BtnPoll10000" Content="10s" Tag="10000" Width="46" Height="22"
+                        FontSize="11" Margin="0,0,8,0" Cursor="Hand" Click="PresetPolling_Click"/>
+            </StackPanel>
+            <StackPanel Grid.Row="33" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBox x:Name="TxtPollingInterval" Style="{StaticResource NumInput}"/>
+                <TextBlock Text="ms" FontSize="10" Foreground="#808088" VerticalAlignment="Center" Margin="3,0,0,0"/>
             </StackPanel>
         </Grid>
 

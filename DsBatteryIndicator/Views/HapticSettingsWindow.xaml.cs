@@ -42,6 +42,8 @@ public partial class HapticSettingsWindow : Window
         ChkRepeatEnabled.IsChecked = cfg.LowBatteryRepeatEnabled;
         TxtRepeatInterval.Text = (cfg.LowBatteryRepeatIntervalMs / 1000).ToString();
 
+        TxtPollingInterval.Text = cfg.PollingIntervalMs.ToString();
+
         int opacityPct = (int)(cfg.WindowOpacity * 100);
         SliderOpacity.Value = opacityPct;
         TxtOpacity.Text = opacityPct.ToString();
@@ -175,6 +177,7 @@ public partial class HapticSettingsWindow : Window
         LblRepeatEnabled.Text = Strings.RepeatEnabled;
         LblRepeatInterval.Text = Strings.RepeatInterval;
         LblOpacity.Text = Strings.WindowOpacity;
+        LblPollingInterval.Text = Strings.PollingInterval;
         LblControllerSpeaker.Text = Strings.ControllerSpeaker;
         LblSpeakerVolume.Text = Strings.SpeakerVolume;
         LblSpeakerDuration.Text = Strings.SpeakerDuration;
@@ -205,6 +208,11 @@ public partial class HapticSettingsWindow : Window
         StyleBtnByName("BtnSpk800");
         StyleBtnByName("BtnSpk1000");
         StyleBtnByName("BtnSelectAudio");
+        // 轮询时间
+        StyleBtnByName("BtnPoll50");
+        StyleBtnByName("BtnPoll250");
+        StyleBtnByName("BtnPoll1000");
+        StyleBtnByName("BtnPoll10000");
     }
 
     private void StyleBtnByName(string name)
@@ -243,6 +251,12 @@ public partial class HapticSettingsWindow : Window
     {
         if (sender is System.Windows.Controls.Button btn && int.TryParse(btn.Tag?.ToString(), out int val))
             TxtSpeakerDuration.Text = val.ToString();
+    }
+
+    private void PresetPolling_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is System.Windows.Controls.Button btn && int.TryParse(btn.Tag?.ToString(), out int val))
+            TxtPollingInterval.Text = val.ToString();
     }
 
     private void ChkControllerSpeaker_Changed(object sender, RoutedEventArgs e)
@@ -309,6 +323,7 @@ public partial class HapticSettingsWindow : Window
         cfg.LowBatteryThreshold = ClampInt(TxtThreshold.Text, 10, 90);
         cfg.LowBatteryRepeatEnabled = ChkRepeatEnabled.IsChecked == true;
         cfg.LowBatteryRepeatIntervalMs = Math.Max(1, ClampInt(TxtRepeatInterval.Text, 1, int.MaxValue)) * 1000;
+        cfg.PollingIntervalMs = Math.Max(50, ClampInt(TxtPollingInterval.Text, 50, int.MaxValue));
         cfg.WindowOpacity = Math.Clamp(ClampInt(TxtOpacity.Text, 30, 100), 30, 100) / 100.0;
 
         cfg.ControllerSpeakerEnabled = ChkControllerSpeaker.IsChecked == true;
