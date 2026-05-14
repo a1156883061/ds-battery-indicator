@@ -178,6 +178,7 @@ public partial class HapticSettingsWindow : Window
         LblRepeatInterval.Text = Strings.RepeatInterval;
         LblOpacity.Text = Strings.WindowOpacity;
         LblPollingInterval.Text = Strings.PollingInterval;
+        LblAudioAlertSection.Text = Strings.AudioAlertSection;
         LblControllerSpeaker.Text = Strings.ControllerSpeaker;
         LblSpeakerVolume.Text = Strings.SpeakerVolume;
         LblSpeakerDuration.Text = Strings.SpeakerDuration;

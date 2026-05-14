@@ -121,14 +121,21 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="8"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="4"/>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="10"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="10"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="10"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="6"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="6"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="6"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="6"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="12"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="10"/>
                 <RowDefinition Height="Auto"/>
@@ -269,27 +276,31 @@
             <!-- 26: 分隔线 -->
             <Border Grid.Row="26" Grid.ColumnSpan="5" Height="1" Background="#2A2A35"/>
 
-            <!-- 28: 手柄扬声器开关 -->
-            <TextBlock x:Name="LblControllerSpeaker" Grid.Row="28" Grid.Column="0"
+            <!-- 28: 音频提醒配置（标题） -->
+            <TextBlock x:Name="LblAudioAlertSection" Grid.Row="28" Grid.ColumnSpan="5"
+                       FontSize="13" FontWeight="SemiBold" Foreground="#E0E0E8"/>
+
+            <!-- 30: 手柄扬声器开关 -->
+            <TextBlock x:Name="LblControllerSpeaker" Grid.Row="30" Grid.Column="0"
                        VerticalAlignment="Center" FontSize="12"/>
-            <CheckBox x:Name="ChkControllerSpeaker" Grid.Row="28" Grid.Column="4"
+            <CheckBox x:Name="ChkControllerSpeaker" Grid.Row="30" Grid.Column="4"
                       VerticalAlignment="Center" Checked="ChkControllerSpeaker_Changed"
                       Unchecked="ChkControllerSpeaker_Changed"/>
 
-            <!-- 29: 扬声器音量 -->
-            <TextBlock x:Name="LblSpeakerVolume" Grid.Row="29" Grid.Column="0"
+            <!-- 32: 扬声器音量 -->
+            <TextBlock x:Name="LblSpeakerVolume" Grid.Row="32" Grid.Column="0"
                        VerticalAlignment="Center" FontSize="12"/>
-            <Slider x:Name="SliderSpeakerVolume" Grid.Row="29" Grid.Column="2"
+            <Slider x:Name="SliderSpeakerVolume" Grid.Row="32" Grid.Column="2"
                     Style="{StaticResource SlimSlider}" Minimum="10" Maximum="100" Value="80"/>
-            <StackPanel Grid.Row="29" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
+            <StackPanel Grid.Row="32" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
                 <TextBox x:Name="TxtSpeakerVolume" Style="{StaticResource NumInput}"/>
                 <TextBlock Text="%" FontSize="10" Foreground="#808088" VerticalAlignment="Center" Margin="3,0,0,0"/>
             </StackPanel>
 
-            <!-- 30: 蜂鸣时长 -->
-            <TextBlock x:Name="LblSpeakerDuration" Grid.Row="30" Grid.Column="0"
+            <!-- 34: 蜂鸣时长 -->
+            <TextBlock x:Name="LblSpeakerDuration" Grid.Row="34" Grid.Column="0"
                        VerticalAlignment="Center" FontSize="12"/>
-            <StackPanel Grid.Row="30" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+            <StackPanel Grid.Row="34" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                 <Button x:Name="BtnSpk200" Content="200ms" Tag="200" Width="46" Height="22" FontSize="11"
                         Margin="0,0,4,0" Cursor="Hand" Click="PresetSpeakerTime_Click"/>
                 <Button x:Name="BtnSpk500" Content="500ms" Tag="500" Width="46" Height="22" FontSize="11"
@@ -299,15 +310,15 @@
                 <Button x:Name="BtnSpk1000" Content="1s" Tag="1000" Width="46" Height="22" FontSize="11"
                         Margin="0,0,8,0" Cursor="Hand" Click="PresetSpeakerTime_Click"/>
             </StackPanel>
-            <StackPanel Grid.Row="30" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
+            <StackPanel Grid.Row="34" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
                 <TextBox x:Name="TxtSpeakerDuration" Style="{StaticResource NumInput}"/>
                 <TextBlock Text="ms" FontSize="10" Foreground="#808088" VerticalAlignment="Center" Margin="3,0,0,0"/>
             </StackPanel>
 
-            <!-- 31: 自定义音频文件 -->
-            <TextBlock x:Name="LblCustomAudio" Grid.Row="31" Grid.Column="0"
+            <!-- 36: 自定义音频文件 -->
+            <TextBlock x:Name="LblCustomAudio" Grid.Row="36" Grid.Column="0"
                        VerticalAlignment="Center" FontSize="12"/>
-            <StackPanel Grid.Row="31" Grid.Column="2" Grid.ColumnSpan="2" Orientation="Horizontal"
+            <StackPanel Grid.Row="36" Grid.Column="2" Grid.ColumnSpan="2" Orientation="Horizontal"
                         VerticalAlignment="Center">
                 <TextBlock x:Name="TxtAudioPath" FontSize="11" Foreground="#808088"
                            VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
@@ -320,10 +331,13 @@
                         Margin="8,0,0,0" Cursor="Hand" Click="BtnSelectAudio_Click"/>
             </StackPanel>
 
-            <!-- 33: 轮询时间 -->
-            <TextBlock x:Name="LblPollingInterval" Grid.Row="33" Grid.Column="0"
+            <!-- 38: 分隔线 -->
+            <Border Grid.Row="38" Grid.ColumnSpan="5" Height="1" Background="#2A2A35"/>
+
+            <!-- 40: 轮询时间 -->
+            <TextBlock x:Name="LblPollingInterval" Grid.Row="40" Grid.Column="0"
                        VerticalAlignment="Center" FontSize="12"/>
-            <StackPanel Grid.Row="33" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+            <StackPanel Grid.Row="40" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                 <Button x:Name="BtnPoll50" Content="50ms" Tag="50" Width="46" Height="22"
                         FontSize="11" Margin="0,0,4,0" Cursor="Hand" Click="PresetPolling_Click"/>
                 <Button x:Name="BtnPoll250" Content="250ms" Tag="250" Width="46" Height="22"
@@ -333,7 +347,7 @@
                 <Button x:Name="BtnPoll10000" Content="10s" Tag="10000" Width="46" Height="22"
                         FontSize="11" Margin="0,0,8,0" Cursor="Hand" Click="PresetPolling_Click"/>
             </StackPanel>
-            <StackPanel Grid.Row="33" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
+            <StackPanel Grid.Row="40" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
                 <TextBox x:Name="TxtPollingInterval" Style="{StaticResource NumInput}"/>
                 <TextBlock Text="ms" FontSize="10" Foreground="#808088" VerticalAlignment="Center" Margin="3,0,0,0"/>
             </StackPanel>

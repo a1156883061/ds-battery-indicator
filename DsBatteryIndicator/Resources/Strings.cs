@@ -45,6 +45,7 @@ public static class Strings
             // 测试通知
             ["TestNotifyText"] = "测试通知：托盘气泡+提示音+手柄震动",
             ["TestNotifyResult"] = "三通道测试触发完成：\n• 托盘气泡\n• 提示音\n• 手柄震动+灯带",
+            ["AudioAlertSection"] = "音频提醒配置",
             ["ControllerSpeaker"] = "手柄扬声器",
             ["ControllerSpeakerEnabled"] = "已启用",
             ["ControllerSpeakerDisabled"] = "已禁用",
@@ -89,6 +90,7 @@ public static class Strings
             ["BtnSave"] = "Save",
             ["TestNotifyText"] = "Test: tray bubble + sound + controller haptic",
             ["TestNotifyResult"] = "Test triggered:\n* Tray bubble\n* Alert sound\n* Controller haptic + lightbar",
+            ["AudioAlertSection"] = "Audio Alert",
             ["ControllerSpeaker"] = "Controller Speaker",
             ["ControllerSpeakerEnabled"] = "Enabled",
             ["ControllerSpeakerDisabled"] = "Disabled",
@@ -179,6 +181,7 @@ public static class Strings
     public static string BtnSave => Get("BtnSave");
     public static string TestNotifyText => Get("TestNotifyText");
     public static string TestNotifyResult => Get("TestNotifyResult");
+    public static string AudioAlertSection => Get("AudioAlertSection");
     public static string ControllerSpeaker => Get("ControllerSpeaker");
     public static string ControllerSpeakerEnabled => Get("ControllerSpeakerEnabled");
     public static string ControllerSpeakerDisabled => Get("ControllerSpeakerDisabled");
