@@ -47,8 +47,6 @@ public static class Strings
             ["TestNotifyResult"] = "三通道测试触发完成：\n• 托盘气泡\n• 提示音\n• 手柄震动+灯带",
             ["AudioAlertSection"] = "音频提醒配置",
             ["ControllerSpeaker"] = "手柄扬声器",
-            ["ControllerSpeakerEnabled"] = "已启用",
-            ["ControllerSpeakerDisabled"] = "已禁用",
             ["CustomAudioFile"] = "自定义音频",
             ["SelectAudioFile"] = "选择文件",
             ["NoFileSelected"] = "未选择（使用内置蜂鸣）",
@@ -92,8 +90,6 @@ public static class Strings
             ["TestNotifyResult"] = "Test triggered:\n* Tray bubble\n* Alert sound\n* Controller haptic + lightbar",
             ["AudioAlertSection"] = "Audio Alert",
             ["ControllerSpeaker"] = "Controller Speaker",
-            ["ControllerSpeakerEnabled"] = "Enabled",
-            ["ControllerSpeakerDisabled"] = "Disabled",
             ["CustomAudioFile"] = "Custom Audio",
             ["SelectAudioFile"] = "Select File",
             ["NoFileSelected"] = "None (built-in beep)",
@@ -183,8 +179,6 @@ public static class Strings
     public static string TestNotifyResult => Get("TestNotifyResult");
     public static string AudioAlertSection => Get("AudioAlertSection");
     public static string ControllerSpeaker => Get("ControllerSpeaker");
-    public static string ControllerSpeakerEnabled => Get("ControllerSpeakerEnabled");
-    public static string ControllerSpeakerDisabled => Get("ControllerSpeakerDisabled");
     public static string CustomAudioFile => Get("CustomAudioFile");
     public static string SelectAudioFile => Get("SelectAudioFile");
     public static string NoFileSelected => Get("NoFileSelected");
