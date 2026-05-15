@@ -48,6 +48,7 @@ public class AppSettings
 
     // 低电量通知配置
     public bool LowBatteryAlertEnabled { get; set; } = true;
+    public bool SubSwitchPanelCollapsed { get; set; } = false;
     public bool HapticEnabled { get; set; } = true;
     public bool LightbarEnabled { get; set; } = true;
     public bool BalloonTipEnabled { get; set; } = true;

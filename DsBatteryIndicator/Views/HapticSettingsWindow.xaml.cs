@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 using System.Windows.Media;
 using DsBatteryIndicator.Resources;
 using DsBatteryIndicator.Services;
@@ -36,13 +37,18 @@ public partial class HapticSettingsWindow : Window
         TxtB.Text = cfg.LightbarColorB.ToString();
 
         // 低电量通知开关
+        ChkAlertEnabled.IsChecked = cfg.LowBatteryAlertEnabled;
         ChkHaptic.IsChecked = cfg.HapticEnabled;
         ChkLightbar.IsChecked = cfg.LightbarEnabled;
         ChkBalloonTip.IsChecked = cfg.BalloonTipEnabled;
         ChkAlertSound.IsChecked = cfg.AlertSoundEnabled;
 
+        // 蒙版 + 折叠初始状态
+        UpdateSubSwitchMask();
+        _isSubPanelExpanded = !cfg.SubSwitchPanelCollapsed;
+        UpdateSubPanelVisibility(animate: false);
+
         // 低电量通知设置
-        ChkAlertEnabled.IsChecked = cfg.LowBatteryAlertEnabled;
         SliderThreshold.Value = cfg.LowBatteryThreshold;
         TxtThreshold.Text = cfg.LowBatteryThreshold.ToString();
         ChkRepeatEnabled.IsChecked = cfg.LowBatteryRepeatEnabled;
@@ -181,7 +187,7 @@ public partial class HapticSettingsWindow : Window
         LblLightbarSwitch.Text = Strings.LightbarSwitch;
         LblBalloonTipSwitch.Text = Strings.BalloonTipSwitch;
         LblAlertSoundSwitch.Text = Strings.AlertSoundSwitch;
-        LblAlertEnabled.Text = Strings.AlertEnabled;
+        LblAlertEnabled.Text = "启用";
         LblAlertThreshold.Text = Strings.AlertThreshold;
         LblRepeatEnabled.Text = Strings.RepeatEnabled;
         LblRepeatInterval.Text = Strings.RepeatInterval;
@@ -305,7 +311,80 @@ public partial class HapticSettingsWindow : Window
         BtnClearAudio.Visibility = hasCustom ? Visibility.Visible : Visibility.Collapsed;
     }
 
+    private bool _isSubPanelExpanded = true;
     private string? _selectedAudioPath;
+
+    private void MasterSwitch_Changed(object sender, RoutedEventArgs e)
+    {
+        UpdateSubSwitchMask();
+    }
+
+    private void CollapseArrow_Click(object sender, MouseButtonEventArgs e)
+    {
+        _isSubPanelExpanded = !_isSubPanelExpanded;
+        UpdateSubPanelVisibility();
+        e.Handled = true;
+    }
+
+    private void UpdateSubSwitchMask()
+    {
+        bool on = ChkAlertEnabled.IsChecked == true;
+        SubSwitchMask.Visibility = on ? Visibility.Collapsed : Visibility.Visible;
+        ChkHaptic.IsEnabled = on;
+        ChkLightbar.IsEnabled = on;
+        ChkControllerSpeaker.IsEnabled = on;
+        ChkBalloonTip.IsEnabled = on;
+        ChkAlertSound.IsEnabled = on;
+    }
+
+    private System.Windows.Media.ScaleTransform? _subPanelScale;
+
+    private void UpdateSubPanelVisibility(bool animate = true)
+    {
+        // 确保 LayoutTransform 已设置
+        if (_subPanelScale == null)
+        {
+            _subPanelScale = new System.Windows.Media.ScaleTransform(1, 1);
+            SubSwitchPanel.LayoutTransform = _subPanelScale;
+        }
+
+        if (_isSubPanelExpanded)
+        {
+            if (animate)
+            {
+                var anim = new System.Windows.Media.Animation.DoubleAnimation(0, 1,
+                    TimeSpan.FromMilliseconds(250))
+                {
+                    EasingFunction = new System.Windows.Media.Animation.QuadraticEase
+                    { EasingMode = System.Windows.Media.Animation.EasingMode.EaseOut }
+                };
+                _subPanelScale.BeginAnimation(System.Windows.Media.ScaleTransform.ScaleYProperty, anim);
+            }
+            else
+            {
+                _subPanelScale.ScaleY = 1;
+            }
+        }
+        else
+        {
+            if (animate)
+            {
+                var anim = new System.Windows.Media.Animation.DoubleAnimation(1, 0,
+                    TimeSpan.FromMilliseconds(200))
+                {
+                    EasingFunction = new System.Windows.Media.Animation.QuadraticEase
+                    { EasingMode = System.Windows.Media.Animation.EasingMode.EaseIn }
+                };
+                _subPanelScale.BeginAnimation(System.Windows.Media.ScaleTransform.ScaleYProperty, anim);
+            }
+            else
+            {
+                _subPanelScale.ScaleY = 0;
+            }
+        }
+
+        TxtCollapseArrow.Text = _isSubPanelExpanded ? "▼" : "▶";
+    }
 
     private void ApplyToConfig()
     {
@@ -321,6 +400,7 @@ public partial class HapticSettingsWindow : Window
         cfg.LightbarEnabled = ChkLightbar.IsChecked == true;
         cfg.BalloonTipEnabled = ChkBalloonTip.IsChecked == true;
         cfg.AlertSoundEnabled = ChkAlertSound.IsChecked == true;
+        cfg.SubSwitchPanelCollapsed = !_isSubPanelExpanded;
         cfg.LowBatteryAlertEnabled = ChkAlertEnabled.IsChecked == true;
         cfg.LowBatteryThreshold = ClampInt(TxtThreshold.Text, 10, 90);
         cfg.LowBatteryRepeatEnabled = ChkRepeatEnabled.IsChecked == true;
