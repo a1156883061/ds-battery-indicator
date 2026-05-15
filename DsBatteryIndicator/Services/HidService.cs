@@ -105,26 +105,38 @@ public class HidService : IDisposable
         if (_device == null || !_device.IsConnected) return;
 
         var cfg = AppSettings.Instance;
+        bool doHaptic = cfg.HapticEnabled, doLightbar = cfg.LightbarEnabled;
         byte intensity = (byte)Math.Clamp(cfg.HapticIntensity, 0, 255);
         byte r = cfg.LightbarColorR, g = cfg.LightbarColorG, b = cfg.LightbarColorB;
         int hapticMs = cfg.HapticDurationMs, lightbarMs = cfg.LightbarDurationMs;
 
         try
         {
-            var report = BuildOutputReport((byte)intensity, (byte)intensity, r, g, b);
+            byte motor = doHaptic ? intensity : (byte)0;
+            byte lr = doLightbar ? r : (byte)0;
+            byte lg = doLightbar ? g : (byte)0;
+            byte lb = doLightbar ? b : (byte)255;
+
+            var report = BuildOutputReport(motor, motor, lr, lg, lb);
             _device.Write(report);
 
-            Task.Delay(hapticMs).ContinueWith(_ =>
+            if (doHaptic)
             {
-                try { _device?.Write(BuildOutputReport(0, 0, r, g, b)); }
-                catch { }
-            });
+                Task.Delay(hapticMs).ContinueWith(_ =>
+                {
+                    try { _device?.Write(BuildOutputReport(0, 0, lr, lg, lb)); }
+                    catch { }
+                });
+            }
 
-            Task.Delay(lightbarMs).ContinueWith(_ =>
+            if (doLightbar)
             {
-                try { _device?.Write(BuildOutputReport(0, 0, 0, 0, 255)); }
-                catch { }
-            });
+                Task.Delay(lightbarMs).ContinueWith(_ =>
+                {
+                    try { _device?.Write(BuildOutputReport(0, 0, 0, 0, 255)); }
+                    catch { }
+                });
+            }
         }
         catch { }
     }

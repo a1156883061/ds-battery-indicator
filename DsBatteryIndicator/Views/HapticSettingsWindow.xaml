@@ -88,7 +88,6 @@
         <TextBlock x:Name="LblTitle" FontSize="15" FontWeight="SemiBold"
                    Foreground="#E0E0E8" Margin="0,0,0,14"/>
 
-        <!-- 统一表格布局：所有行共享同一套列定义 -->
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" MinWidth="56"/>
@@ -103,6 +102,28 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="6"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="6"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="6"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="6"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="6"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="6"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="6"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="6"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="12"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="12"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="6"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="6"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="12"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="12"/>
@@ -111,23 +132,9 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="10"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="6"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="6"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="6"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="6"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="8"/>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="10"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="10"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="10"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="6"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="6"/>
                 <RowDefinition Height="Auto"/>
@@ -141,17 +148,88 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- 0: 震动强度 -->
-            <TextBlock x:Name="LblHapticIntensity" Grid.Row="0" Grid.Column="0"
-                       VerticalAlignment="Center" FontSize="12"/>
-            <Slider x:Name="SliderIntensity" Grid.Row="0" Grid.Column="2"
-                    Style="{StaticResource SlimSlider}" Minimum="50" Maximum="255" Value="255"/>
-            <TextBox x:Name="TxtIntensity" Grid.Row="0" Grid.Column="4" HorizontalAlignment="Left" Style="{StaticResource NumInput}"/>
+            <!-- 0: 低电量通知（标题） -->
+            <TextBlock x:Name="LblLowBatterySection" Grid.Row="0" Grid.ColumnSpan="5"
+                       FontSize="13" FontWeight="SemiBold" Foreground="#E0E0E8"/>
 
-            <!-- 2: 震动时间 -->
-            <TextBlock x:Name="LblHapticDuration" Grid.Row="2" Grid.Column="0"
+            <!-- 2: 手柄震动 -->
+            <TextBlock x:Name="LblHapticSwitch" Grid.Row="2" Grid.Column="0"
                        VerticalAlignment="Center" FontSize="12"/>
-            <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+            <CheckBox x:Name="ChkHaptic" Grid.Row="2" Grid.Column="4" VerticalAlignment="Center"/>
+
+            <!-- 4: 灯带变色 -->
+            <TextBlock x:Name="LblLightbarSwitch" Grid.Row="4" Grid.Column="0"
+                       VerticalAlignment="Center" FontSize="12"/>
+            <CheckBox x:Name="ChkLightbar" Grid.Row="4" Grid.Column="4" VerticalAlignment="Center"/>
+
+            <!-- 6: 手柄音频 -->
+            <TextBlock x:Name="LblControllerSpeaker" Grid.Row="6" Grid.Column="0"
+                       VerticalAlignment="Center" FontSize="12"/>
+            <CheckBox x:Name="ChkControllerSpeaker" Grid.Row="6" Grid.Column="4"
+                      VerticalAlignment="Center"/>
+
+            <!-- 8: 托盘气泡 -->
+            <TextBlock x:Name="LblBalloonTipSwitch" Grid.Row="8" Grid.Column="0"
+                       VerticalAlignment="Center" FontSize="12"/>
+            <CheckBox x:Name="ChkBalloonTip" Grid.Row="8" Grid.Column="4" VerticalAlignment="Center"/>
+
+            <!-- 10: 系统提示音 -->
+            <TextBlock x:Name="LblAlertSoundSwitch" Grid.Row="10" Grid.Column="0"
+                       VerticalAlignment="Center" FontSize="12"/>
+            <CheckBox x:Name="ChkAlertSound" Grid.Row="10" Grid.Column="4" VerticalAlignment="Center"/>
+
+            <!-- 12: 启用提示 -->
+            <TextBlock x:Name="LblAlertEnabled" Grid.Row="12" Grid.Column="0"
+                       VerticalAlignment="Center" FontSize="12"/>
+            <CheckBox x:Name="ChkAlertEnabled" Grid.Row="12" Grid.Column="4" VerticalAlignment="Center"/>
+
+            <!-- 14: 电量阈值 -->
+            <TextBlock x:Name="LblAlertThreshold" Grid.Row="14" Grid.Column="0"
+                       VerticalAlignment="Center" FontSize="12"/>
+            <Slider x:Name="SliderThreshold" Grid.Row="14" Grid.Column="2"
+                    Style="{StaticResource SlimSlider}" Minimum="10" Maximum="90" Value="10"/>
+            <StackPanel Grid.Row="14" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBox x:Name="TxtThreshold" Style="{StaticResource NumInput}"/>
+                <TextBlock Text="%" FontSize="10" Foreground="#808088" VerticalAlignment="Center" Margin="3,0,0,0"/>
+            </StackPanel>
+
+            <!-- 16: 重复提醒 -->
+            <TextBlock x:Name="LblRepeatEnabled" Grid.Row="16" Grid.Column="0"
+                       VerticalAlignment="Center" FontSize="12"/>
+            <CheckBox x:Name="ChkRepeatEnabled" Grid.Row="16" Grid.Column="4" VerticalAlignment="Center"/>
+
+            <!-- 18: 提醒间隔 -->
+            <TextBlock x:Name="LblRepeatInterval" Grid.Row="18" Grid.Column="0"
+                       VerticalAlignment="Center" FontSize="12"/>
+            <StackPanel Grid.Row="18" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                <Button x:Name="BtnInterval300" Content="5min" Tag="300" Width="46" Height="22"
+                        FontSize="11" Margin="0,0,4,0" Cursor="Hand" Click="PresetInterval_Click"/>
+                <Button x:Name="BtnInterval600" Content="10min" Tag="600" Width="46" Height="22"
+                        FontSize="11" Margin="0,0,4,0" Cursor="Hand" Click="PresetInterval_Click"/>
+                <Button x:Name="BtnInterval1800" Content="30min" Tag="1800" Width="46" Height="22"
+                        FontSize="11" Margin="0,0,4,0" Cursor="Hand" Click="PresetInterval_Click"/>
+                <Button x:Name="BtnInterval3600" Content="1h" Tag="3600" Width="46" Height="22"
+                        FontSize="11" Margin="0,0,8,0" Cursor="Hand" Click="PresetInterval_Click"/>
+            </StackPanel>
+            <StackPanel Grid.Row="18" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBox x:Name="TxtRepeatInterval" Style="{StaticResource NumInput}"/>
+                <TextBlock Text="s" FontSize="10" Foreground="#808088" VerticalAlignment="Center" Margin="3,0,0,0"/>
+            </StackPanel>
+
+            <!-- 20: 分隔线 -->
+            <Border Grid.Row="20" Grid.ColumnSpan="5" Height="1" Background="#2A2A35"/>
+
+            <!-- 22: 震动强度 -->
+            <TextBlock x:Name="LblHapticIntensity" Grid.Row="22" Grid.Column="0"
+                       VerticalAlignment="Center" FontSize="12"/>
+            <Slider x:Name="SliderIntensity" Grid.Row="22" Grid.Column="2"
+                    Style="{StaticResource SlimSlider}" Minimum="50" Maximum="255" Value="255"/>
+            <TextBox x:Name="TxtIntensity" Grid.Row="22" Grid.Column="4" HorizontalAlignment="Left" Style="{StaticResource NumInput}"/>
+
+            <!-- 24: 震动时间 -->
+            <TextBlock x:Name="LblHapticDuration" Grid.Row="24" Grid.Column="0"
+                       VerticalAlignment="Center" FontSize="12"/>
+            <StackPanel Grid.Row="24" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                 <Button x:Name="BtnHaptic200" Content="200ms" Tag="200" Width="46" Height="22" FontSize="11"
                         Margin="0,0,4,0" Cursor="Hand" Click="PresetHapticTime_Click"/>
                 <Button x:Name="BtnHaptic500" Content="500ms" Tag="500" Width="46" Height="22" FontSize="11"
@@ -161,15 +239,15 @@
                 <Button x:Name="BtnHaptic1000" Content="1s" Tag="1000" Width="46" Height="22" FontSize="11"
                         Margin="0,0,8,0" Cursor="Hand" Click="PresetHapticTime_Click"/>
             </StackPanel>
-            <StackPanel Grid.Row="2" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
+            <StackPanel Grid.Row="24" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
                 <TextBox x:Name="TxtHapticTime" Style="{StaticResource NumInput}"/>
                 <TextBlock Text="ms" FontSize="10" Foreground="#808088" VerticalAlignment="Center" Margin="3,0,0,0"/>
             </StackPanel>
 
-            <!-- 4: 灯带时间 -->
-            <TextBlock x:Name="LblLightbarDuration" Grid.Row="4" Grid.Column="0"
+            <!-- 26: 灯带时间 -->
+            <TextBlock x:Name="LblLightbarDuration" Grid.Row="26" Grid.Column="0"
                        VerticalAlignment="Center" FontSize="12"/>
-            <StackPanel Grid.Row="4" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+            <StackPanel Grid.Row="26" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                 <Button x:Name="BtnLight1000" Content="1s" Tag="1000" Width="46" Height="22" FontSize="11"
                         Margin="0,0,4,0" Cursor="Hand" Click="PresetLightTime_Click"/>
                 <Button x:Name="BtnLight3000" Content="3s" Tag="3000" Width="46" Height="22" FontSize="11"
@@ -179,19 +257,18 @@
                 <Button x:Name="BtnLight10000" Content="10s" Tag="10000" Width="46" Height="22" FontSize="11"
                         Margin="0,0,8,0" Cursor="Hand" Click="PresetLightTime_Click"/>
             </StackPanel>
-
-            <StackPanel Grid.Row="4" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
+            <StackPanel Grid.Row="26" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
                 <TextBox x:Name="TxtLightTime" Style="{StaticResource NumInput}"/>
                 <TextBlock Text="ms" FontSize="10" Foreground="#808088" VerticalAlignment="Center" Margin="3,0,0,0"/>
             </StackPanel>
 
-            <!-- 6: 分隔线 -->
-            <Border Grid.Row="6" Grid.ColumnSpan="5" Height="1" Background="#2A2A35"/>
+            <!-- 28: 分隔线 -->
+            <Border Grid.Row="28" Grid.ColumnSpan="5" Height="1" Background="#2A2A35"/>
 
-            <!-- 8: 灯带颜色 -->
-            <TextBlock x:Name="LblLightbarColor" Grid.Row="8" Grid.Column="0"
+            <!-- 30: 灯带颜色 -->
+            <TextBlock x:Name="LblLightbarColor" Grid.Row="30" Grid.Column="0"
                        VerticalAlignment="Center" FontSize="12"/>
-            <StackPanel Grid.Row="8" Grid.Column="2" Orientation="Horizontal">
+            <StackPanel Grid.Row="30" Grid.Column="2" Orientation="Horizontal">
                 <TextBlock Text="R" Foreground="#FF6666" FontSize="10" VerticalAlignment="Center" Margin="0,0,2,0"/>
                 <TextBox x:Name="TxtR" Style="{StaticResource NumInput}"/>
                 <TextBlock Text="G" Foreground="#66FF66" FontSize="10" VerticalAlignment="Center" Margin="10,0,2,0"/>
@@ -214,92 +291,40 @@
                 </Border>
             </StackPanel>
 
-            <!-- 10: 分隔线 -->
-            <Border Grid.Row="10" Grid.ColumnSpan="5" Height="1" Background="#2A2A35"/>
+            <!-- 32: 分隔线 -->
+            <Border Grid.Row="32" Grid.ColumnSpan="5" Height="1" Background="#2A2A35"/>
 
-            <!-- 12: 电量不足提示（标题） -->
-            <TextBlock x:Name="LblLowBatterySection" Grid.Row="12" Grid.ColumnSpan="5"
-                       FontSize="13" FontWeight="SemiBold" Foreground="#E0E0E8"/>
-
-            <!-- 14: 启用提示 -->
-            <TextBlock x:Name="LblAlertEnabled" Grid.Row="14" Grid.Column="0"
+            <!-- 34: 窗口透明度 -->
+            <TextBlock x:Name="LblOpacity" Grid.Row="34" Grid.Column="0"
                        VerticalAlignment="Center" FontSize="12"/>
-            <CheckBox x:Name="ChkAlertEnabled" Grid.Row="14" Grid.Column="4" VerticalAlignment="Center"/>
-
-            <!-- 16: 电量阈值 -->
-            <TextBlock x:Name="LblAlertThreshold" Grid.Row="16" Grid.Column="0"
-                       VerticalAlignment="Center" FontSize="12"/>
-            <Slider x:Name="SliderThreshold" Grid.Row="16" Grid.Column="2"
-                    Style="{StaticResource SlimSlider}" Minimum="10" Maximum="90" Value="10"/>
-            <StackPanel Grid.Row="16" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBox x:Name="TxtThreshold" Style="{StaticResource NumInput}"/>
-                <TextBlock Text="%" FontSize="10" Foreground="#808088" VerticalAlignment="Center" Margin="3,0,0,0"/>
-            </StackPanel>
-
-            <!-- 18: 重复提醒 -->
-            <TextBlock x:Name="LblRepeatEnabled" Grid.Row="18" Grid.Column="0"
-                       VerticalAlignment="Center" FontSize="12"/>
-            <CheckBox x:Name="ChkRepeatEnabled" Grid.Row="18" Grid.Column="4" VerticalAlignment="Center"/>
-
-            <!-- 20: 提醒间隔 -->
-            <TextBlock x:Name="LblRepeatInterval" Grid.Row="20" Grid.Column="0"
-                       VerticalAlignment="Center" FontSize="12"/>
-            <StackPanel Grid.Row="20" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                <Button x:Name="BtnInterval300" Content="5min" Tag="300" Width="46" Height="22"
-                        FontSize="11" Margin="0,0,4,0" Cursor="Hand" Click="PresetInterval_Click"/>
-                <Button x:Name="BtnInterval600" Content="10min" Tag="600" Width="46" Height="22"
-                        FontSize="11" Margin="0,0,4,0" Cursor="Hand" Click="PresetInterval_Click"/>
-                <Button x:Name="BtnInterval1800" Content="30min" Tag="1800" Width="46" Height="22"
-                        FontSize="11" Margin="0,0,4,0" Cursor="Hand" Click="PresetInterval_Click"/>
-                <Button x:Name="BtnInterval3600" Content="1h" Tag="3600" Width="46" Height="22"
-                        FontSize="11" Margin="0,0,8,0" Cursor="Hand" Click="PresetInterval_Click"/>
-            </StackPanel>
-
-            <StackPanel Grid.Row="20" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBox x:Name="TxtRepeatInterval" Style="{StaticResource NumInput}"/>
-                <TextBlock Text="s" FontSize="10" Foreground="#808088" VerticalAlignment="Center" Margin="3,0,0,0"/>
-            </StackPanel>
-
-            <!-- 22: 分隔线 -->
-            <Border Grid.Row="22" Grid.ColumnSpan="5" Height="1" Background="#2A2A35"/>
-
-            <!-- 24: 窗口透明度 -->
-            <TextBlock x:Name="LblOpacity" Grid.Row="24" Grid.Column="0"
-                       VerticalAlignment="Center" FontSize="12"/>
-            <Slider x:Name="SliderOpacity" Grid.Row="24" Grid.Column="2"
+            <Slider x:Name="SliderOpacity" Grid.Row="34" Grid.Column="2"
                     Style="{StaticResource SlimSlider}" Minimum="30" Maximum="100" Value="100"/>
-            <StackPanel Grid.Row="24" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
+            <StackPanel Grid.Row="34" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
                 <TextBox x:Name="TxtOpacity" Style="{StaticResource NumInput}"/>
                 <TextBlock Text="%" FontSize="10" Foreground="#808088" VerticalAlignment="Center" Margin="3,0,0,0"/>
             </StackPanel>
 
-            <!-- 26: 分隔线 -->
-            <Border Grid.Row="26" Grid.ColumnSpan="5" Height="1" Background="#2A2A35"/>
+            <!-- 36: 分隔线 -->
+            <Border Grid.Row="36" Grid.ColumnSpan="5" Height="1" Background="#2A2A35"/>
 
-            <!-- 28: 音频提醒配置（标题） -->
-            <TextBlock x:Name="LblAudioAlertSection" Grid.Row="28" Grid.ColumnSpan="5"
+            <!-- 38: 音频提醒配置（标题） -->
+            <TextBlock x:Name="LblAudioAlertSection" Grid.Row="38" Grid.ColumnSpan="5"
                        FontSize="13" FontWeight="SemiBold" Foreground="#E0E0E8"/>
 
-            <!-- 30: 手柄扬声器开关 -->
-            <TextBlock x:Name="LblControllerSpeaker" Grid.Row="30" Grid.Column="0"
+            <!-- 40: 扬声器音量 -->
+            <TextBlock x:Name="LblSpeakerVolume" Grid.Row="40" Grid.Column="0"
                        VerticalAlignment="Center" FontSize="12"/>
-            <CheckBox x:Name="ChkControllerSpeaker" Grid.Row="30" Grid.Column="4"
-                      VerticalAlignment="Center"/>
-
-            <!-- 32: 扬声器音量 -->
-            <TextBlock x:Name="LblSpeakerVolume" Grid.Row="32" Grid.Column="0"
-                       VerticalAlignment="Center" FontSize="12"/>
-            <Slider x:Name="SliderSpeakerVolume" Grid.Row="32" Grid.Column="2"
+            <Slider x:Name="SliderSpeakerVolume" Grid.Row="40" Grid.Column="2"
                     Style="{StaticResource SlimSlider}" Minimum="10" Maximum="100" Value="80"/>
-            <StackPanel Grid.Row="32" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
+            <StackPanel Grid.Row="40" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
                 <TextBox x:Name="TxtSpeakerVolume" Style="{StaticResource NumInput}"/>
                 <TextBlock Text="%" FontSize="10" Foreground="#808088" VerticalAlignment="Center" Margin="3,0,0,0"/>
             </StackPanel>
 
-            <!-- 34: 蜂鸣时长 -->
-            <TextBlock x:Name="LblSpeakerDuration" Grid.Row="34" Grid.Column="0"
+            <!-- 42: 蜂鸣时长 -->
+            <TextBlock x:Name="LblSpeakerDuration" Grid.Row="42" Grid.Column="0"
                        VerticalAlignment="Center" FontSize="12"/>
-            <StackPanel Grid.Row="34" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+            <StackPanel Grid.Row="42" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                 <Button x:Name="BtnSpk200" Content="200ms" Tag="200" Width="46" Height="22" FontSize="11"
                         Margin="0,0,4,0" Cursor="Hand" Click="PresetSpeakerTime_Click"/>
                 <Button x:Name="BtnSpk500" Content="500ms" Tag="500" Width="46" Height="22" FontSize="11"
@@ -309,15 +334,15 @@
                 <Button x:Name="BtnSpk1000" Content="1s" Tag="1000" Width="46" Height="22" FontSize="11"
                         Margin="0,0,8,0" Cursor="Hand" Click="PresetSpeakerTime_Click"/>
             </StackPanel>
-            <StackPanel Grid.Row="34" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
+            <StackPanel Grid.Row="42" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
                 <TextBox x:Name="TxtSpeakerDuration" Style="{StaticResource NumInput}"/>
                 <TextBlock Text="ms" FontSize="10" Foreground="#808088" VerticalAlignment="Center" Margin="3,0,0,0"/>
             </StackPanel>
 
-            <!-- 36: 自定义音频文件 -->
-            <TextBlock x:Name="LblCustomAudio" Grid.Row="36" Grid.Column="0"
+            <!-- 44: 自定义音频文件 -->
+            <TextBlock x:Name="LblCustomAudio" Grid.Row="44" Grid.Column="0"
                        VerticalAlignment="Center" FontSize="12"/>
-            <StackPanel Grid.Row="36" Grid.Column="2" Grid.ColumnSpan="2" Orientation="Horizontal"
+            <StackPanel Grid.Row="44" Grid.Column="2" Grid.ColumnSpan="2" Orientation="Horizontal"
                         VerticalAlignment="Center">
                 <TextBlock x:Name="TxtAudioPath" FontSize="11" Foreground="#808088"
                            VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
@@ -330,13 +355,13 @@
                         Margin="8,0,0,0" Cursor="Hand" Click="BtnSelectAudio_Click"/>
             </StackPanel>
 
-            <!-- 38: 分隔线 -->
-            <Border Grid.Row="38" Grid.ColumnSpan="5" Height="1" Background="#2A2A35"/>
+            <!-- 46: 分隔线 -->
+            <Border Grid.Row="46" Grid.ColumnSpan="5" Height="1" Background="#2A2A35"/>
 
-            <!-- 40: 轮询时间 -->
-            <TextBlock x:Name="LblPollingInterval" Grid.Row="40" Grid.Column="0"
+            <!-- 48: 轮询时间 -->
+            <TextBlock x:Name="LblPollingInterval" Grid.Row="48" Grid.Column="0"
                        VerticalAlignment="Center" FontSize="12"/>
-            <StackPanel Grid.Row="40" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+            <StackPanel Grid.Row="48" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                 <Button x:Name="BtnPoll50" Content="50ms" Tag="50" Width="46" Height="22"
                         FontSize="11" Margin="0,0,4,0" Cursor="Hand" Click="PresetPolling_Click"/>
                 <Button x:Name="BtnPoll250" Content="250ms" Tag="250" Width="46" Height="22"
@@ -346,7 +371,7 @@
                 <Button x:Name="BtnPoll10000" Content="10s" Tag="10000" Width="46" Height="22"
                         FontSize="11" Margin="0,0,8,0" Cursor="Hand" Click="PresetPolling_Click"/>
             </StackPanel>
-            <StackPanel Grid.Row="40" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
+            <StackPanel Grid.Row="48" Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
                 <TextBox x:Name="TxtPollingInterval" Style="{StaticResource NumInput}"/>
                 <TextBlock Text="ms" FontSize="10" Foreground="#808088" VerticalAlignment="Center" Margin="3,0,0,0"/>
             </StackPanel>

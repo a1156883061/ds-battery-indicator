@@ -34,7 +34,11 @@ public static class Strings
             ["HapticDuration"] = "震动时间",
             ["LightbarDuration"] = "灯带时间",
             ["LightbarColor"] = "灯带颜色",
-            ["LowBatterySection"] = "电量不足提示",
+            ["LowBatterySection"] = "低电量通知",
+            ["HapticSwitch"] = "手柄震动",
+            ["LightbarSwitch"] = "灯带变色",
+            ["BalloonTipSwitch"] = "托盘气泡",
+            ["AlertSoundSwitch"] = "系统提示音",
             ["AlertEnabled"] = "启用提示",
             ["AlertThreshold"] = "电量阈值",
             ["RepeatEnabled"] = "重复提醒",
@@ -78,7 +82,11 @@ public static class Strings
             ["HapticDuration"] = "Duration",
             ["LightbarDuration"] = "Lightbar Time",
             ["LightbarColor"] = "Lightbar Color",
-            ["LowBatterySection"] = "Low Battery Alert",
+            ["LowBatterySection"] = "Low Battery Notification",
+            ["HapticSwitch"] = "Haptic",
+            ["LightbarSwitch"] = "Lightbar",
+            ["BalloonTipSwitch"] = "Balloon Tip",
+            ["AlertSoundSwitch"] = "Alert Sound",
             ["AlertEnabled"] = "Alert Enabled",
             ["AlertThreshold"] = "Threshold",
             ["RepeatEnabled"] = "Repeat",
@@ -163,6 +171,10 @@ public static class Strings
     public static string LowBattery => Get("LowBattery");
     public static string Toast_LowBattery => Get("Toast_LowBattery");
     public static string About_Text => Get("About_Text");
+    public static string HapticSwitch => Get("HapticSwitch");
+    public static string LightbarSwitch => Get("LightbarSwitch");
+    public static string BalloonTipSwitch => Get("BalloonTipSwitch");
+    public static string AlertSoundSwitch => Get("AlertSoundSwitch");
     public static string HapticIntensity => Get("HapticIntensity");
     public static string HapticDuration => Get("HapticDuration");
     public static string LightbarDuration => Get("LightbarDuration");

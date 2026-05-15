@@ -46,8 +46,12 @@ public class AppSettings
     public byte LightbarColorG { get; set; } = 0;
     public byte LightbarColorB { get; set; } = 0;
 
-    // 电量不足提示配置
+    // 低电量通知配置
     public bool LowBatteryAlertEnabled { get; set; } = true;
+    public bool HapticEnabled { get; set; } = true;
+    public bool LightbarEnabled { get; set; } = true;
+    public bool BalloonTipEnabled { get; set; } = true;
+    public bool AlertSoundEnabled { get; set; } = true;
     public int LowBatteryThreshold { get; set; } = 10;
     public bool LowBatteryRepeatEnabled { get; set; } = true;
     public int LowBatteryRepeatIntervalMs { get; set; } = 600000;

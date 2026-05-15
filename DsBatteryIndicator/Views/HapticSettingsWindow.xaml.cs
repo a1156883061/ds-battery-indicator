@@ -35,7 +35,13 @@ public partial class HapticSettingsWindow : Window
         TxtG.Text = cfg.LightbarColorG.ToString();
         TxtB.Text = cfg.LightbarColorB.ToString();
 
-        // 电量不足设置
+        // 低电量通知开关
+        ChkHaptic.IsChecked = cfg.HapticEnabled;
+        ChkLightbar.IsChecked = cfg.LightbarEnabled;
+        ChkBalloonTip.IsChecked = cfg.BalloonTipEnabled;
+        ChkAlertSound.IsChecked = cfg.AlertSoundEnabled;
+
+        // 低电量通知设置
         ChkAlertEnabled.IsChecked = cfg.LowBatteryAlertEnabled;
         SliderThreshold.Value = cfg.LowBatteryThreshold;
         TxtThreshold.Text = cfg.LowBatteryThreshold.ToString();
@@ -171,6 +177,10 @@ public partial class HapticSettingsWindow : Window
         LblLightbarDuration.Text = Strings.LightbarDuration;
         LblLightbarColor.Text = Strings.LightbarColor;
         LblLowBatterySection.Text = Strings.LowBatterySection;
+        LblHapticSwitch.Text = Strings.HapticSwitch;
+        LblLightbarSwitch.Text = Strings.LightbarSwitch;
+        LblBalloonTipSwitch.Text = Strings.BalloonTipSwitch;
+        LblAlertSoundSwitch.Text = Strings.AlertSoundSwitch;
         LblAlertEnabled.Text = Strings.AlertEnabled;
         LblAlertThreshold.Text = Strings.AlertThreshold;
         LblRepeatEnabled.Text = Strings.RepeatEnabled;
@@ -307,6 +317,10 @@ public partial class HapticSettingsWindow : Window
         cfg.LightbarColorG = (byte)ClampInt(TxtG.Text, 0, 255);
         cfg.LightbarColorB = (byte)ClampInt(TxtB.Text, 0, 255);
 
+        cfg.HapticEnabled = ChkHaptic.IsChecked == true;
+        cfg.LightbarEnabled = ChkLightbar.IsChecked == true;
+        cfg.BalloonTipEnabled = ChkBalloonTip.IsChecked == true;
+        cfg.AlertSoundEnabled = ChkAlertSound.IsChecked == true;
         cfg.LowBatteryAlertEnabled = ChkAlertEnabled.IsChecked == true;
         cfg.LowBatteryThreshold = ClampInt(TxtThreshold.Text, 10, 90);
         cfg.LowBatteryRepeatEnabled = ChkRepeatEnabled.IsChecked == true;
