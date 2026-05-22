@@ -48,7 +48,9 @@ jobs:
         run: |
           $ver = "${{ github.ref_name }}" -replace '^v', ''
           (Get-Content installer/setup.iss) -replace '#define MyAppVersion ".+"', "#define MyAppVersion ""$ver""" | Set-Content installer/setup.iss
-          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer/setup.iss
+          Set-Location installer
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" setup.iss
+          Set-Location ..
           Move-Item publish/installer/DS-Battery-Indicator-Setup.exe DS-Battery-Indicator-Setup-v$ver.exe
 
       - name: 打包 Framework-Dependent

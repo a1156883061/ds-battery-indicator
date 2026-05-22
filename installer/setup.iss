@@ -21,11 +21,12 @@ PrivilegesRequired=lowest
 ArchitecturesInstallIn64BitMode=x64compatible
 
 [Languages]
+Name: "chinesesimplified"; MessagesFile: "ChineseSimplified.isl"
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
-Name: "desktopicon"; Description: "Create a desktop shortcut"; GroupDescription: "Additional shortcuts:"
-Name: "startup"; Description: "Start with Windows"; GroupDescription: "Additional shortcuts:"
+Name: "desktopicon"; Description: "创建桌面快捷方式"; GroupDescription: "附加快捷方式:"
+Name: "startup"; Description: "开机自启"; GroupDescription: "附加快捷方式:"
 
 [Files]
 Source: "..\publish\self-contained\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
@@ -36,4 +37,4 @@ Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: 
 Name: "{userstartup}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: startup; WorkingDir: "{app}"
 
 [Run]
-Filename: "{app}\{#MyAppExeName}"; Description: "启动 {#MyAppName}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#MyAppName}}"; Flags: nowait postinstall skipifsilent
