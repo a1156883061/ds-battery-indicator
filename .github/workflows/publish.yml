@@ -22,6 +22,11 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
+      - name: 安装 Inno Setup
+        uses: crazy-max/ghaction-chocolatey@v3
+        with:
+          args: install innosetup --no-progress
+
       - name: 方案 A — Framework-Dependent 发布
         uses: nick-fields/retry@v3
         with:
@@ -37,6 +42,14 @@ jobs:
           max_attempts: 2
           retry_wait_seconds: 30
           command: dotnet publish DsBatteryIndicator/DsBatteryIndicator.csproj -c Release -r win-x64 --self-contained -o publish/sc
+
+      - name: 构建安装包 (Inno Setup)
+        shell: pwsh
+        run: |
+          $ver = "${{ github.ref_name }}" -replace '^v', ''
+          (Get-Content installer/setup.iss) -replace '#define MyAppVersion ".+"', "#define MyAppVersion ""$ver""" | Set-Content installer/setup.iss
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer/setup.iss
+          Move-Item publish/installer/DS-Battery-Indicator-Setup.exe DS-Battery-Indicator-Setup-v$ver.exe
 
       - name: 打包 Framework-Dependent
         shell: pwsh
@@ -59,6 +72,7 @@ jobs:
           path: |
             DS-Battery-Indicator-framework-dependent.zip
             DS-Battery-Indicator-self-contained.zip
+            DS-Battery-Indicator-Setup-*.exe
 
       - name: 创建 Release 并上传（tag 触发时）
         if: startsWith(github.ref, 'refs/tags/')
@@ -67,4 +81,5 @@ jobs:
           files: |
             DS-Battery-Indicator-framework-dependent.zip
             DS-Battery-Indicator-self-contained.zip
+            DS-Battery-Indicator-Setup-*.exe
           generate_release_notes: true
