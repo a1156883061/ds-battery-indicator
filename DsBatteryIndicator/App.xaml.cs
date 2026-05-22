@@ -85,8 +85,7 @@ public partial class App : Application
         contextMenu.Items.Add(_trayShowHideItem);
         contextMenu.Items.Add(Strings.Topmost, null, (s, e) =>
         {
-            if (_mainWindow != null)
-                _mainWindow.Topmost = !_mainWindow.Topmost;
+            _mainWindow?.ToggleTopmost();
         });
         contextMenu.Items.Add(Strings.Exit, null, (s, e) =>
         {

@@ -14,8 +14,17 @@ namespace DsBatteryIndicator.Views;
 public partial class MainWindow : Window
 {
     private readonly MainViewModel _viewModel;
-    private bool _isTopmost = true;
+    private bool _isTopmost;
     private bool _isAutoStart;
+
+    public void ToggleTopmost()
+    {
+        _isTopmost = !_isTopmost;
+        Topmost = _isTopmost;
+        MenuTopmost.IsChecked = _isTopmost;
+        AppSettings.Instance.Topmost = _isTopmost;
+        AppSettings.Instance.Save();
+    }
 
     public MainViewModel ViewModel => _viewModel;
 
@@ -23,7 +32,12 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
-        Opacity = AppSettings.Instance.WindowOpacity;
+        var cfg = AppSettings.Instance;
+        Opacity = cfg.WindowOpacity;
+
+        // 恢复置顶状态
+        _isTopmost = cfg.Topmost;
+        Topmost = _isTopmost;
 
         _viewModel = new MainViewModel();
         DataContext = _viewModel;
@@ -61,13 +75,8 @@ public partial class MainWindow : Window
         Strings.LanguageChanged += UpdateMenuTexts;
 
         MenuHide.Click += (s, e) => Hide();
-        MenuTopmost.IsChecked = true;
-        MenuTopmost.Click += (s, e) =>
-        {
-            _isTopmost = !_isTopmost;
-            Topmost = _isTopmost;
-            MenuTopmost.IsChecked = _isTopmost;
-        };
+        MenuTopmost.IsChecked = _isTopmost;
+        MenuTopmost.Click += (s, e) => ToggleTopmost();
 
         MenuAutoStart.Click += (s, e) =>
         {
