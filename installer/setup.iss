@@ -21,12 +21,11 @@ PrivilegesRequired=lowest
 ArchitecturesInstallIn64BitMode=x64compatible
 
 [Languages]
-Name: "chinesesimplified"; MessagesFile: "compiler:Languages\ChineseSimplified.isl"
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
-Name: "desktopicon"; Description: "创建桌面快捷方式"; GroupDescription: "其他快捷方式:"
-Name: "startup"; Description: "开机自启"; GroupDescription: "其他快捷方式:"
+Name: "desktopicon"; Description: "Create a desktop shortcut"; GroupDescription: "Additional shortcuts:"
+Name: "startup"; Description: "Start with Windows"; GroupDescription: "Additional shortcuts:"
 
 [Files]
 Source: "..\publish\self-contained\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs
